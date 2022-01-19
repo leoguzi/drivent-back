@@ -1,11 +1,11 @@
-import dotenv from "dotenv";
+import "./src/setup";
 
-dotenv.config();
+console.log(process.env.DATABASE_URL);
 
 export default {
   type: "postgres",
   url: process.env.DATABASE_URL,
-  migrationsTableName: "migrations",
+  migrationsTableName: "migrations", 
   entities: ["dist/entities/*.js"],
   migrations: ["dist/migrations/*.js"],
   cli: {

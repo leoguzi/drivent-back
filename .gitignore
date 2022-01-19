@@ -1,6 +1,7 @@
 dist
 node_modules
 .env*
-!.env.example
+!.env.production.example
 yarn.lock
 .vscode
+package-*
