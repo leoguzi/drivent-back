@@ -14,7 +14,9 @@
     "eslint": "npx eslint src",
     "eslint:fix": "npx eslint --fix src",
     "seed": "ts-node -r tsconfig-paths/register ./src/seeders",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    
+    "deploy": "npm run migration:run && git push heroku main"
   },
   "keywords": [],
   "author": "",
@@ -62,11 +64,12 @@
     "joi": "^17.4.2",
     "js-yaml": "^4.1.0",
     "jsonwebtoken": "^8.5.1",
+    "ntl": "^5.1.0",
     "pg": "^8.6.0",
     "readline-sync": "^1.4.10",
     "reflect-metadata": "^0.1.13",
     "typeorm": "^0.2.34",
-    "uuid": "^8.3.2",
-    "typescript-transform-paths": "^3.3.1"
+    "typescript-transform-paths": "^3.3.1",
+    "uuid": "^8.3.2"
   }
 }
