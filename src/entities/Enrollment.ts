@@ -65,9 +65,6 @@ export default class Enrollment extends BaseEntity {
     enrollment.populateFromData(data);
 
     await enrollment.save();
-    /*   console.log(result);
-    enrollment.address.enrollmentId = enrollment.id;
-    enrollment.address.save(); */
   }
 
   static async getByUserIdWithAddress(userId: number) {
