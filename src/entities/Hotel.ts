@@ -39,4 +39,8 @@ export default class Hotel extends BaseEntity {
       
       return hotels.map(hotel => formatHotelInfos(hotel));
     }
+  
+    getRooms() {
+      return this.rooms;
+    }
 }
