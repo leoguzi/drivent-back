@@ -8,6 +8,7 @@ import {
   OneToOne,
 } from "typeorm";
 import Address from "@/entities/Address";
+import Reservation from "./Reservation";
 
 @Entity("enrollments")
 export default class Enrollment extends BaseEntity {
@@ -34,6 +35,9 @@ export default class Enrollment extends BaseEntity {
     cascade: ["insert", "update"],
   })
   address: Address;
+
+  @OneToOne(() => Reservation, (reservation) => reservation.enrollment)
+  reservation: Reservation;
 
   populateFromData(data: EnrollmentData) {
     this.name = data.name;
