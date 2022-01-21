@@ -3,7 +3,7 @@ import Enrollment from "@/entities/Enrollment";
 interface TicketData{
     enrollment: Enrollment,
     type: string,
-    paymentDate?: string,
+    paymentDate?: Date | null,
     withHotel: boolean
 }
 

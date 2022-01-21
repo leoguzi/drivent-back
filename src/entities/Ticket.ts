@@ -1,7 +1,9 @@
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from "typeorm";
+
 import ConflictError from "@/errors/ConflictError";
 import TicketData from "@/interfaces/ticket";
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from "typeorm";
 import Enrollment from "./Enrollment";
+
 @Entity("tickets")
 export default class Ticket extends BaseEntity {
     @PrimaryGeneratedColumn()
@@ -10,8 +12,8 @@ export default class Ticket extends BaseEntity {
     @Column()
     type: string;
 
-    @Column({ type: String, nullable: true })
-    paymentDate: string | null;
+    @Column({ nullable: true, default: null })
+    paymentDate: Date | null;
 
     @Column()
     withHotel: boolean;
@@ -22,7 +24,7 @@ export default class Ticket extends BaseEntity {
 
     populateFromData(data: TicketData) {
       this.type = data.type;
-      this.paymentDate = null;
+      this.paymentDate = data.paymentDate;
       this.withHotel = data.withHotel;
       this.enrollment = data.enrollment;
     }
