@@ -7,6 +7,7 @@ import InvalidDataError from "@/errors/InvalidData";
 import ConflictError from "@/errors/ConflictError";
 import UnauthorizedError from "@/errors/Unauthorized";
 import NotFoundError from "@/errors/NotFoundError";
+import CannotBuyTicketBeforeEnrollError from "@/errors/CannotBuyTicketBeforeEnrollError";
 
 /* eslint-disable-next-line */
 export default function errorHandlingMiddleware (err: Error, _req: Request, res: Response, _next: NextFunction) {
@@ -20,6 +21,12 @@ export default function errorHandlingMiddleware (err: Error, _req: Request, res:
   }
 
   if (err instanceof CannotEnrollBeforeStartDateError) {
+    return res.status(httpStatus.BAD_REQUEST).send({
+      message: err.message
+    });
+  }
+
+  if (err instanceof CannotBuyTicketBeforeEnrollError) {
     return res.status(httpStatus.BAD_REQUEST).send({
       message: err.message
     });
