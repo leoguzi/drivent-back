@@ -3,6 +3,7 @@ import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColum
 import ConflictError from "@/errors/ConflictError";
 import TicketData from "@/interfaces/ticket";
 import Enrollment from "./Enrollment";
+import NotFoundTicketError from "@/errors/NotFoundTicketError";
 
 @Entity("tickets")
 export default class Ticket extends BaseEntity {
@@ -24,7 +25,6 @@ export default class Ticket extends BaseEntity {
 
     populateFromData(data: TicketData) {
       this.type = data.type;
-      this.paymentDate = data.paymentDate;
       this.withHotel = data.withHotel;
       this.enrollment = data.enrollment;
     }
@@ -37,5 +37,14 @@ export default class Ticket extends BaseEntity {
       ticket = Ticket.create();
       ticket.populateFromData(data);
       await ticket.save();
+    }
+
+    static async updatePaymentDate(enrollment: Enrollment) {
+      const ticket = await this.findOne({ where: { enrollment } });
+      if (!ticket) {
+        throw new NotFoundTicketError;
+      }
+
+      await this.update({ enrollment }, { paymentDate: new Date() });
     }
 }
