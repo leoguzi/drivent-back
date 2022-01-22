@@ -17,3 +17,12 @@ export async function createNewTicket(ticketData: TicketData, userId: number) {
   ticketData.enrollment = enrollment;
   await Ticket.createTicket(ticketData);
 }
+
+export async function updateTicket(userId: number) {
+  const enrollment = await enrollmentService.getEnrollmentWithAddress(userId);
+  if (!enrollment) {
+    throw new CannotBuyTicketBeforeEnrollError;
+  }
+
+  await Ticket.updatePaymentDate(enrollment);
+}

@@ -6,5 +6,6 @@ import ticketSchema from "@/schemas/ticketSchema";
 const router = Router();
 
 router.post("/", schemaValidatingMiddleware(ticketSchema), ticketController.saveTicketInfo);
+router.post("/payment", ticketController.updateTicketInfo);
 
 export default router;

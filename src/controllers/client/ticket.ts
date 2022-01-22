@@ -10,3 +10,8 @@ export async function saveTicketInfo(req: Request, res: Response) {
 
   res.sendStatus(httpStatus.OK);
 }
+
+export async function updateTicketInfo(req: Request, res: Response) {
+  await ticketService.updateTicket(req.user.id);
+  res.sendStatus(httpStatus.OK);
+}
