@@ -39,4 +39,17 @@ export default class Hotel extends BaseEntity {
       
       return hotels.map(hotel => formatHotelInfos(hotel));
     }
+
+    private setValues(name: string, image: string) {
+      this.name = name;
+      this.image = image;
+    }
+
+    static async createNew(name: string, image: string) {
+      const hotel = new Hotel();
+
+      hotel.setValues(name, image);
+
+      return Hotel.save(hotel);
+    }
 }

@@ -36,7 +36,8 @@ export default class Ticket extends BaseEntity {
       }
       ticket = Ticket.create();
       ticket.populateFromData(data);
-      await ticket.save();
+      
+      return ticket.save();
     }
 
     static async updatePaymentDate(enrollment: Enrollment) {

@@ -72,7 +72,7 @@ export default class Enrollment extends BaseEntity {
     enrollment ||= Enrollment.create();
     enrollment.populateFromData(data);
 
-    await enrollment.save();
+    return enrollment.save();
   }
 
   static async getByUserIdWithAddress(userId: number) {
