@@ -39,12 +39,18 @@ export default class Ticket extends BaseEntity {
       await ticket.save();
     }
 
-    static async updatePaymentDate(enrollment: Enrollment) {
+    static async getTicketByEnroll(enrollment: Enrollment) {
       const ticket = await this.findOne({ where: { enrollment } });
       if (!ticket) {
         throw new NotFoundTicketError;
       }
+      return ticket;
+    }
 
-      await this.update({ enrollment }, { paymentDate: new Date() });
+    static async updatePaymentDate(enrollment: Enrollment) {
+      const ticket = this.getTicketByEnroll(enrollment);
+      if (ticket) {
+        await this.update({ enrollment }, { paymentDate: new Date() });
+      }
     }
 }
