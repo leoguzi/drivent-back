@@ -48,9 +48,6 @@ export default class Ticket extends BaseEntity {
     }
 
     static async updatePaymentDate(enrollment: Enrollment) {
-      const ticket = this.getTicketByEnroll(enrollment);
-      if (ticket) {
-        await this.update({ enrollment }, { paymentDate: new Date() });
-      }
+      await this.update({ enrollment }, { paymentDate: new Date() });
     }
 }

@@ -3,6 +3,7 @@ import Ticket from "@/entities/Ticket";
 import * as enrollmentService from "@/services/client/enrollment";
 import CannotBuyTicketBeforeEnrollError from "@/errors/CannotBuyTicketBeforeEnrollError";
 import CannotBuyTicketOnlineWithHotelError from "@/errors/CannotBuyTicketOnlineWithHotelError";
+import ConflictError from "@/errors/ConflictError";
 
 export async function createNewTicket(ticketData: TicketData, userId: number) {
   const enrollment = await enrollmentService.getEnrollmentWithAddress(userId);
@@ -18,11 +19,16 @@ export async function createNewTicket(ticketData: TicketData, userId: number) {
   await Ticket.createTicket(ticketData);
 }
 
-export async function updateTicket(userId: number) {
+export async function updatePaymentDateTicket(userId: number) {
   const enrollment = await enrollmentService.getEnrollmentWithAddress(userId);
 
   if (!enrollment) {
     throw new CannotBuyTicketBeforeEnrollError;
+  }
+
+  const ticket = await Ticket.getTicketByEnroll(enrollment);
+  if (ticket.paymentDate) {
+    throw new ConflictError("The ticket is already paid");
   }
 
   await Ticket.updatePaymentDate(enrollment);
@@ -30,5 +36,6 @@ export async function updateTicket(userId: number) {
 
 export async function getTicket(userId: number) {
   const enrollment = await enrollmentService.getEnrollmentWithAddress(userId);
+  
   return await Ticket.getTicketByEnroll(enrollment);
 }

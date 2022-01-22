@@ -12,7 +12,7 @@ export async function saveTicketInfo(req: Request, res: Response) {
 }
 
 export async function updateTicketInfo(req: Request, res: Response) {
-  await ticketService.updateTicket(req.user.id);
+  await ticketService.updatePaymentDateTicket(req.user.id);
   res.sendStatus(httpStatus.OK);
 }
 
