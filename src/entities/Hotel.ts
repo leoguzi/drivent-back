@@ -40,7 +40,13 @@ export default class Hotel extends BaseEntity {
       return hotels.map(hotel => formatHotelInfos(hotel));
     }
   
-    getRooms() {
-      return this.rooms;
+    getRoomsOrderedByName() {
+      return this.rooms.sort((roomA, roomB) => {
+        if (roomA.name > roomB.name)
+          return 1;
+        if (roomA.name < roomB.name)
+          return -1;
+        return 0;
+      });
     }
 }

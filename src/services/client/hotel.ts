@@ -30,7 +30,7 @@ export async function getHotelRooms(hotelId: number, userId: number) {
   }
 
   const hotel: Hotel = await Hotel.findOne({ id: hotelId });
-  const hotelRooms = hideRoomsReservationsInfos(hotel.rooms);
+  const hotelRooms = hideRoomsReservationsInfos(hotel.getRoomsOrderedByName());
   return hotelRooms; 
 }
 
