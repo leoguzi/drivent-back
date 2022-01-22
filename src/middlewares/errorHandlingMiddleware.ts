@@ -72,7 +72,7 @@ export default function errorHandlingMiddleware (err: Error, _req: Request, res:
   }
 
   if (err instanceof NotFoundTicketError) {
-    return res.status(httpStatus.BAD_REQUEST).send({
+    return res.status(httpStatus.NOT_FOUND).send({
       message: err.message
     });
   }
