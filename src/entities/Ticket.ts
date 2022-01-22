@@ -29,6 +29,11 @@ export default class Ticket extends BaseEntity {
       this.enrollment = data.enrollment;
     }
 
+    getValue() {
+      const value = this.type === "online" ? 100 : 250;
+      return (this.withHotel ? value + 350 : value);
+    }
+
     static async createTicket(data: TicketData) {
       let ticket = await this.findOne({ where: { enrollment: data.enrollment } });
       if (ticket) {
@@ -44,10 +49,15 @@ export default class Ticket extends BaseEntity {
       if (!ticket) {
         throw new NotFoundTicketError;
       }
-      return ticket;
+      
+      return {
+        ...ticket,
+        value: ticket.getValue(),
+      };
     }
 
     static async updatePaymentDate(enrollment: Enrollment) {
       await this.update({ enrollment }, { paymentDate: new Date() });
     }
 }
+
