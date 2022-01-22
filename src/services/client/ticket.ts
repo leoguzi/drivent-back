@@ -20,9 +20,15 @@ export async function createNewTicket(ticketData: TicketData, userId: number) {
 
 export async function updateTicket(userId: number) {
   const enrollment = await enrollmentService.getEnrollmentWithAddress(userId);
+
   if (!enrollment) {
     throw new CannotBuyTicketBeforeEnrollError;
   }
 
   await Ticket.updatePaymentDate(enrollment);
+}
+
+export async function getTicket(userId: number) {
+  const enrollment = await enrollmentService.getEnrollmentWithAddress(userId);
+  return await Ticket.getTicketByEnroll(enrollment);
 }
