@@ -15,7 +15,7 @@ export async function signIn(email: string, password: string) {
     userId: user.id
   }, process.env.JWT_SECRET);
 
-  const session = await Session.createNew(user.id, token);
+  await Session.createNew(user.id, token);
 
   return {
     user: {

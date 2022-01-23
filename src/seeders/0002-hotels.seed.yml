@@ -1,0 +1,13 @@
+seeds:
+    - Hotel:
+        id: 1
+        name: "Driven Resort"
+        image: "https://cdn.panrotas.com.br/portal-panrotas-statics/media-files-cache/301395/078fea0259c5b673bf2d35bcc14f0da5pestanaalvorsouthbeachexterior5/61,0,2424,1447/1206,720,0.24/0/default.jpg"
+    - Hotel:
+        id: 2
+        name: "Driven Palace"
+        image: "https://claudia.abril.com.br/wp-content/uploads/2020/01/cinco-spas-dentro-de-hoteis-1.jpg?quality=85&strip=info"
+    - Hotel:
+        id: 3
+        name: "Driven World"
+        image: "https://magazine.zarpo.com.br/wp-content/uploads/2018/10/conheca-os-9-hoteis-e-resorts-da-rede-vila-gale-no-brasil.jpg"
