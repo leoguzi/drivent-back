@@ -32,6 +32,5 @@ export default async function createEnrollment(user: User): Promise<Enrollment> 
     address,
   };
 
-  // console.log(enrollment);
   return Enrollment.createOrUpdate(enrollment);
 }
