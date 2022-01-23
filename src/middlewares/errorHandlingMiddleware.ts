@@ -73,7 +73,7 @@ export default function errorHandlingMiddleware (err: Error, _req: Request, res:
       message: err.message
     });
   }
-
+  
   if (err instanceof ForbiddenError) {
     return res.status(httpStatus.FORBIDDEN).send({
       message: err.message
