@@ -15,6 +15,19 @@ export default class Hotel extends BaseEntity {
     @OneToMany(() => Room, (room) => room.hotel, { eager: true })
     rooms: Room[];
 
+    private setValues(name: string, image: string) {
+      this.name = name;
+      this.image = image;
+    }
+
+    static async createNew(name: string, image: string) {
+      const hotel = new Hotel();
+
+      hotel.setValues(name, image);
+
+      return Hotel.save(hotel);
+    }
+
     static async getHotelTypesOfRoomsAndAvailableVacancies() {
       function formatHotelInfos(hotel: Hotel) {
         const roomTypes: {[index: string]: number} = {};
@@ -50,16 +63,12 @@ export default class Hotel extends BaseEntity {
       });
     }
 
-    private setValues(name: string, image: string) {
-      this.name = name;
-      this.image = image;
+    private hideRoomsReservationsInfos(rooms: Room[]) {
+      return rooms.map(room => ({ ...room, reservations: room.reservations.length }));
     }
 
-    static async createNew(name: string, image: string) {
-      const hotel = new Hotel();
-
-      hotel.setValues(name, image);
-
-      return Hotel.save(hotel);
+    getRooms() {
+      const orderedRooms = this.getRoomsOrderedByName();
+      return this.hideRoomsReservationsInfos(orderedRooms);
     }
 }

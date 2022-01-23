@@ -8,7 +8,7 @@ import supertest from "supertest";
 import User from "../../../../src/entities/User";
 import Session from "../../../../src/entities/Session";
 import ReservationData from "../../../../src/interfaces/reservation";
-import deleterRepository from "../../../repositories/deleterRepository";
+import { clearTable } from "../../../repositories/deleterRepository";
 import Reservation from "../../../../src/entities/Reservation";
 
 beforeAll(async() => {
@@ -40,5 +40,5 @@ describe("saveReservationInfo", () => {
 });
 
 afterAll(async() => {
-  await deleterRepository(Reservation);
+  await clearTable(Reservation);
 });

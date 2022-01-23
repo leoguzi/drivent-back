@@ -10,7 +10,7 @@ import createRoom from "../../../factories/room";
 import Enrollment from "../../../../src/entities/Enrollment";
 import createReservation from "../../../factories/reservation";
 import Reservation from "../../../../src/entities/Reservation";
-import deleterRepository from "../../../repositories/deleterRepository";
+import { clearTable } from "../../../repositories/deleterRepository";
 import NotFoundReservationError from "../../../../src/errors/NotFoundReservation";
 
 beforeAll(async() => {
@@ -52,7 +52,7 @@ describe("getReservationInfo", () => {
   });
   
   it("should return status code 404 and throw NotFoundReservationError", async() => {
-    await deleterRepository(Reservation);
+    await clearTable(Reservation);
     const result = await supertest(app).get("/reservation").set({ Authorization: `Bearer ${mockSession.token}` });
     const error = new NotFoundReservationError();   
     
@@ -62,5 +62,5 @@ describe("getReservationInfo", () => {
 });
 
 afterAll(async() => {
-  await deleterRepository(Reservation);
+  await clearTable(Reservation);
 });

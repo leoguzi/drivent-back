@@ -6,7 +6,7 @@ import User from "../../src/entities/User";
 
 faker.locale = "pt_BR";
 
-export default function createEnrollment(user: User): Promise<Enrollment> {
+export default async function createEnrollment(user: User): Promise<Enrollment> {
   const address: AddressData = {
     cep: faker.address.zipCode(),
     street: faker.address.streetName(),
@@ -32,6 +32,5 @@ export default function createEnrollment(user: User): Promise<Enrollment> {
     address,
   };
 
-  // console.log(enrollment);
   return Enrollment.createOrUpdate(enrollment);
 }

@@ -1,8 +1,7 @@
-import Enrollment from "@/entities/Enrollment";
 import Hotel from "@/entities/Hotel";
-import Room from "@/entities/Room";
 import * as enrollmentService from "./enrollment";
 import ForbiddenError from "@/errors/Forbidden";
+import NoContentError from "@/errors/NoContentError";
 
 export async function getHotelsInfos(userId: number) {
   const enrollment =  await enrollmentService.getEnrollmentWithAddress(userId);
@@ -22,22 +21,33 @@ export async function getHotelsInfos(userId: number) {
   }
 
   const hotels = await Hotel.getHotelTypesOfRoomsAndAvailableVacancies();
+
+  if(hotels.length < 1) {
+    throw new NoContentError("Não há hotéis cadastrados");
+  }
   
   return hotels;
 }
 
 export async function getHotelRooms(hotelId: number, userId: number) {
-  const enrollment =  await Enrollment.getByUserIdWithAddress(userId);
+  const enrollment =  await enrollmentService.getEnrollmentWithAddress(userId);
 
   if (!enrollment) {
-    throw new ForbiddenError("User must enroll an event to see the list of hotels");
+    throw new ForbiddenError("Você precisa comprar um ingresso antes de fazer a escolha de hospedagem");
   }
 
   const hotel: Hotel = await Hotel.findOne({ id: hotelId });
-  const hotelRooms = hideRoomsReservationsInfos(hotel.getRoomsOrderedByName());
-  return hotelRooms; 
+
+  if(!hotel) {
+    throw new NoContentError("Não há hotéis cadastrados");
+  }
+
+  const rooms = hotel.getRooms();
+
+  if(rooms.length < 1) {
+    throw new NoContentError("Não há hotéis cadastrados");
+  }
+
+  return rooms;
 }
 
-function hideRoomsReservationsInfos(rooms: Room[]) {
-  return rooms.map(room => ({ ...room, reservations: room.reservations.length }));
-}

@@ -28,24 +28,11 @@ export default class Reservation extends BaseEntity {
     }
 
     static async createOrUpdate(data: ReservationData) {
-      let reservation = await this.findOne({ where: { id: data.enrollmentId } });
+      let reservation = await this.findOne({ where: { enrollmentId: data.enrollmentId } });
 
       reservation ||= Reservation.create();
       reservation.populateFromData(data);
 
-      await reservation.save();
-    }
-
-    setValues(room: Room, enrollment: Enrollment) {
-      this.room = room;
-      this.enrollment = enrollment;
-    }
-  
-    static async createNew(room: Room, enrollment: Enrollment) {
-      const reservation = new Reservation();
-  
-      reservation.setValues(room, enrollment);
-        
-      return Reservation.save(reservation);
+      return reservation.save();
     }
 }

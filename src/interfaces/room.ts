@@ -1,4 +1,5 @@
 import ReservationData from "@/interfaces/reservation";
+import HotelData from "./hotel";
 
 interface RoomData {
     id?: number,
@@ -6,6 +7,7 @@ interface RoomData {
     vacancies: number,
     hotelId: number,
     reservations?: ReservationData[] | number
+    hotel?: HotelData
 }
 
 export default RoomData;

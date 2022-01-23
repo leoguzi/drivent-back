@@ -6,6 +6,11 @@ import ForbiddenError from "@/errors/Forbidden";
 import NotFoundReservationError from "@/errors/NotFoundReservation";
 
 export async function createNewReservation(reservationData: ReservationData) {
+  /* 
+  
+  verificar se ainda tem vaga no quarto fornecido
+
+  */
   return await Reservation.createOrUpdate(reservationData);
 }
 
