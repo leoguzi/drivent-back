@@ -27,6 +27,8 @@ import httpStatus from "http-status";
 
 const route = "/hotels/:id/rooms";
 
+jest.setTimeout(20000);
+
 describe("getHotelRoomsInfo", () => {
   let user: User;
   let session: Session;
@@ -51,7 +53,7 @@ describe("getHotelRoomsInfo", () => {
 
     hotel = await createHotel();
     room = await createRoom(hotel);
-    reservation = await createReservation(room, enrollment);
+    await createReservation( enrollment, room);
 
     expectedBody = [
       {
@@ -65,8 +67,8 @@ describe("getHotelRoomsInfo", () => {
   });
 
   afterEach(async() => {
-    clearTable(Reservation);
-    clearTable(Room);
+    await clearTable(Reservation);
+    await clearTable(Room);
   });
 
   afterAll(async() => {
@@ -101,8 +103,8 @@ describe("getHotelRoomsInfo", () => {
   });
 
   it("Should returns status code 204 when there are no rooms", async() => {  
-    clearTable(Reservation);
-    clearTable(Room); 
+    await clearTable(Reservation);
+    await clearTable(Room); 
 
     const response = await supertest(app)
       .get(route.replace(":id", `${hotel.id}`))
@@ -112,9 +114,9 @@ describe("getHotelRoomsInfo", () => {
   });
 
   it("Should returns status code 204 when there is no hotel with provided id", async() => {  
-    clearTable(Reservation);
-    clearTable(Room); 
-    clearTable(Hotel); 
+    await clearTable(Reservation);
+    await clearTable(Room); 
+    await clearTable(Hotel); 
 
     const response = await supertest(app)
       .get(route.replace(":id", `${hotel.id}`))
@@ -124,9 +126,9 @@ describe("getHotelRoomsInfo", () => {
   });
 
   it("Should returns status code 403 when there is no enrollment", async() => {  
-    clearTable(Ticket);
-    clearTable(Address); 
-    clearTable(Enrollment); 
+    await clearTable(Ticket);
+    await clearTable(Address); 
+    await clearTable(Enrollment); 
 
     const response = await supertest(app)
       .get(route.replace(":id", `${hotel.id}`))

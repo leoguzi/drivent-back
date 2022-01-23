@@ -9,11 +9,12 @@ import UnauthorizedError from "@/errors/Unauthorized";
 import NotFoundError from "@/errors/NotFoundError";
 import ForbiddenError from "@/errors/Forbidden";
 import CannotBuyTicketBeforeEnrollError from "@/errors/CannotBuyTicketBeforeEnrollError";
+import NotFoundReservationError from "@/errors/NotFoundReservation";
 import NoContentError from "@/errors/NoContentError";
 import InvalidQueryParameterError from "@/errors/InvalidQueryParameterError";
 
 /* eslint-disable-next-line */
-export default function errorHandlingMiddleware (err: Error, _req: Request, res: Response, _next: NextFunction) {
+export default function errorHandlingMiddleware(err: Error, _req: Request, res: Response, _next: NextFunction) {
 
   /* eslint-disable-next-line */
   //console.error(err);
@@ -72,15 +73,21 @@ export default function errorHandlingMiddleware (err: Error, _req: Request, res:
     });
   }
 
-  if (err instanceof NoContentError) {
-    return res.status(httpStatus.NO_CONTENT).send({
+  if (err instanceof NotFoundReservationError) {
+    return res.status(httpStatus.NOT_FOUND).send({
       message: err.message
     });
-  }
+    
+    if (err instanceof NoContentError) {
+      return res.status(httpStatus.NO_CONTENT).send({
+        message: err.message
+      });
+    }
 
-  /* eslint-disable-next-line no-console */
-  console.error(err);
-  res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
-    message: "Internal Server Error!"
-  });
+    /* eslint-disable-next-line no-console */
+    console.error(err);
+    res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
+      message: "Internal Server Error!"
+    });
+  }
 }
