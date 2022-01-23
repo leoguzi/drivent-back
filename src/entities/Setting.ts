@@ -25,4 +25,31 @@ export default class Setting extends BaseEntity {
       logoImage: getValue("logo_image"),
     };
   }
+
+  static async createNew(startDate: Date, endDate: Date, eventTitle: string, backgroundImage: string, logoImage: string) {
+    const start_date = new Setting();
+    start_date.name = "start_date";
+    start_date.value = startDate.toDateString();
+    await Setting.save(start_date);
+
+    const end_date = new Setting();
+    end_date.name = "end_date";
+    end_date.value = endDate.toDateString();
+    await Setting.save(end_date);
+
+    const event_title = new Setting();
+    event_title.name = "event_title";
+    event_title.value = eventTitle;
+    await Setting.save(event_title);
+
+    const background_image = new Setting();
+    background_image.name = "background_image";
+    background_image.value = backgroundImage;
+    await Setting.save(background_image);
+
+    const logo_image = new Setting();
+    logo_image.name = "logo_image";
+    logo_image.value = logoImage;
+    await Setting.save(logo_image);
+  }
 }

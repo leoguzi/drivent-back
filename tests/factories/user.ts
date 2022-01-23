@@ -9,7 +9,7 @@ export default function createUser(name: string): Promise<User> {
   }
 
   const email= faker.internet.email(newName);
-  const password = faker.internet.password(6);
+  const password = faker.internet.password(15);
 
   return User.createNew(email, password);
 }
