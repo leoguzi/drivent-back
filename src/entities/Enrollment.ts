@@ -8,6 +8,8 @@ import {
   OneToOne,
 } from "typeorm";
 import Address from "@/entities/Address";
+import Reservation from "./Reservation";
+import Ticket from "./Ticket";
 
 @Entity("enrollments")
 export default class Enrollment extends BaseEntity {
@@ -34,6 +36,12 @@ export default class Enrollment extends BaseEntity {
     cascade: ["insert", "update"],
   })
   address: Address;
+
+  @OneToOne(() => Reservation, (reservation) => reservation.enrollment)
+  reservation: Reservation;
+  
+  @OneToOne(() => Ticket, (ticket: Ticket) => ticket.enrollment, { eager: true })
+  ticket: Ticket;
 
   populateFromData(data: EnrollmentData) {
     this.name = data.name;
@@ -64,10 +72,7 @@ export default class Enrollment extends BaseEntity {
     enrollment ||= Enrollment.create();
     enrollment.populateFromData(data);
 
-    await enrollment.save();
-    /*   console.log(result);
-    enrollment.address.enrollmentId = enrollment.id;
-    enrollment.address.save(); */
+    return enrollment.save();
   }
 
   static async getByUserIdWithAddress(userId: number) {
