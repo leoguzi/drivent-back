@@ -1,15 +1,14 @@
 import faker from "faker";
 import User from "../../src/entities/User";
 
-export default function createUser(name: string): Promise<User> {
-  let newName = faker.name.firstName();
+export default function createUser(avoidEmail: string = null): Promise<User> {
+  let email = faker.internet.email();
 
-  while (name === newName) {
-    newName = faker.name.firstName();
+  while (avoidEmail === email) {
+    email = faker.internet.email();
   }
 
-  const email= faker.internet.email(newName);
-  const password = faker.internet.password(6);
+  const password = faker.internet.password(15);
 
   return User.createNew(email, password);
 }
