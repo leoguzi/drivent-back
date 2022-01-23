@@ -17,14 +17,21 @@ export default async function createEnrollment(user: User): Promise<Enrollment> 
     addressDetail: faker.datatype.string(),
   };
 
+  let cpf = "";
+
+  while (cpf.length < 11) {
+    cpf += parseInt(`${Math.random() * 10}`, 10);
+  }
+
   const enrollment: EnrollmentData = {
-    name: `${faker.name.firstName} ${faker.name.lastName}`,
-    cpf: "000.000.000-00",
+    name: `${faker.name.firstName()} ${faker.name.lastName()}`,
+    cpf: cpf,
     birthday: "01-01-1970",
     phone: "(00) 99999-9999", 
     userId: user.id,
     address,
   };
 
+  // console.log(enrollment);
   return Enrollment.createOrUpdate(enrollment);
 }

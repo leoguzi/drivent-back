@@ -2,7 +2,7 @@ import supertest from "supertest";
 import { getConnection } from "typeorm";
 import httpStatus from "http-status";
 
-import server, { init } from "../../../../src/app";
+import app, { init } from "../../../../src/app";
 import User from "../../../../src/entities/User";
 import Session from "../../../../src/entities/Session";
 import Enrollment from "../../../../src/entities/Enrollment";
@@ -11,6 +11,8 @@ import Hotel from "../../../../src/entities/Hotel";
 import Room from "../../../../src/entities/Room";
 
 import { clearDatabase, clearTable } from "../../../repositories/deleterRepository";
+import closeConnection from "../../../repositories/closeConnection";
+
 import createEvent from "../../../factories/event";
 import createUser from "../../../factories/user";
 import createSession from "../../../factories/session";
@@ -68,11 +70,11 @@ describe("Tests for /hotels route", () => {
   afterAll(async() => {
     await clearDatabase();
 
-    await getConnection().close();
+    await closeConnection();
   });
 
   it("should return status code 200 (ok) and an array of hotels", async() => {
-    const response = await supertest(server)
+    const response = await supertest(app)
       .get(route)
       .set("authorization", `Bearer ${session.token}`);
 
@@ -81,7 +83,7 @@ describe("Tests for /hotels route", () => {
   });
 
   it("should return status code 403 (forbidden) when there is no enrollment", async() => {
-    const response = await supertest(server)
+    const response = await supertest(app)
       .get(route)
       .set("authorization", `Bearer ${session.token}`);
 
@@ -91,7 +93,7 @@ describe("Tests for /hotels route", () => {
   it("should return status code 403 (forbidden) when there is no ticket", async() => {
     enrollment = await createEnrollment(user);
 
-    const response = await supertest(server)
+    const response = await supertest(app)
       .get(route)
       .set("authorization", `Bearer ${session.token}`);
 
@@ -102,7 +104,7 @@ describe("Tests for /hotels route", () => {
     enrollment = await createEnrollment(user);
     ticket = await createTicket(enrollment, true, false, "presencial");
 
-    const response = await supertest(server)
+    const response = await supertest(app)
       .get(route)
       .set("authorization", `Bearer ${session.token}`);
 
@@ -113,10 +115,24 @@ describe("Tests for /hotels route", () => {
     enrollment = await createEnrollment(user);
     ticket = await createTicket(enrollment, false, true, "presencial");
 
-    const response = await supertest(server)
+    const response = await supertest(app)
       .get(route)
       .set("authorization", `Bearer ${session.token}`);
 
     expect(response.status).toBe(httpStatus.FORBIDDEN);
+  });
+
+  it("should return status code 204 (no content) when there are no hotels", async() => {
+    enrollment = await createEnrollment(user);
+    ticket = await createTicket(enrollment, true, true, "presencial");
+
+    await clearTable(Room);
+    await clearTable(Hotel);
+    
+    const response = await supertest(app)
+      .get(route)
+      .set("authorization", `Bearer ${session.token}`);
+
+    expect(response.status).toBe(httpStatus.NO_CONTENT);
   });
 });
