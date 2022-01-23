@@ -21,14 +21,13 @@ export async function createNewTicket(ticketData: TicketData, userId: number) {
 
 export async function updatePaymentDateTicket(userId: number) {
   const enrollment = await enrollmentService.getEnrollmentWithAddress(userId);
-
   if (!enrollment) {
     throw new CannotBuyTicketBeforeEnrollError;
   }
 
   const ticket = await Ticket.getTicketByEnroll(enrollment);
   if (ticket.paymentDate) {
-    throw new ConflictError("The ticket is already paid");
+    throw new ConflictError("Você já pagou seu ingresso");
   }
 
   await Ticket.updatePaymentDate(enrollment);
