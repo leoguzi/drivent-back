@@ -2,7 +2,7 @@ import supertest from "supertest";
 import { getConnection } from "typeorm";
 import httpStatus from "http-status";
 
-import server, { init } from "../../src/app";
+import server, { init } from "../../../../src/app";
 
 const route = "/hotels";
 

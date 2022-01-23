@@ -1,7 +1,7 @@
 import faker from "faker";
 import User from "../../src/entities/User";
 
-export default function createUser(avoidEmail: string = null): Promise<User> {
+export default async function createUser(avoidEmail: string = null): Promise<User> {
   let email = faker.internet.email();
 
   while (avoidEmail === email) {
