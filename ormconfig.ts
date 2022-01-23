@@ -1,7 +1,5 @@
 import "./src/setup";
 
-console.log(process.env.DATABASE_URL);
-
 export default {
   type: "postgres",
   url: process.env.DATABASE_URL,
