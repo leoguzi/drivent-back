@@ -9,3 +9,8 @@ export async function saveReservationInfo(req: Request, res: Response) {
   await reservationService.createNewReservation(reservationData);
   res.sendStatus(httpStatus.CREATED);
 }
+
+export async function getReservationInfo(req: Request, res: Response) {
+  const reservation = await reservationService.findUserReservation(req.user.id);
+  res.send(reservation).status(httpStatus.OK);
+}

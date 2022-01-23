@@ -5,7 +5,7 @@ interface RoomData {
     name: string,
     vacancies: number,
     hotelId: number,
-    reservations?: ReservationData[]
+    reservations?: ReservationData[] | number
 }
 
 export default RoomData;

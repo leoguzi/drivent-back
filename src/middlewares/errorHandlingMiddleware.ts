@@ -9,6 +9,7 @@ import UnauthorizedError from "@/errors/Unauthorized";
 import NotFoundError from "@/errors/NotFoundError";
 import ForbiddenError from "@/errors/Forbidden";
 import CannotBuyTicketBeforeEnrollError from "@/errors/CannotBuyTicketBeforeEnrollError";
+import NotFoundReservationError from "@/errors/NotFoundReservation";
 
 /* eslint-disable-next-line */
 export default function errorHandlingMiddleware (err: Error, _req: Request, res: Response, _next: NextFunction) {
@@ -60,6 +61,12 @@ export default function errorHandlingMiddleware (err: Error, _req: Request, res:
 
   if (err instanceof ForbiddenError) {
     return res.status(httpStatus.FORBIDDEN).send({
+      message: err.message
+    });
+  }
+
+  if (err instanceof NotFoundReservationError) {
+    return res.status(httpStatus.NOT_FOUND).send({
       message: err.message
     });
   }
