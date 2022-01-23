@@ -1,7 +1,7 @@
 import createEnrollment from "../../../factories/enrollment";
 import createSession from "../../../factories/session";
 import createUser from "../../../factories/user";
-import app, { init } from "./../../../../src/app";
+import app, { init } from "../../../../src/app";
 import supertest from "supertest";
 import UnauthorizedError from "../../../../src/errors/Unauthorized";
 
