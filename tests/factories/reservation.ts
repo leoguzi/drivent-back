@@ -1,0 +1,7 @@
+import Enrollment from "../../src/entities/Enrollment";
+import Reservation from "../../src/entities/Reservation";
+import Room from "../../src/entities/Room";
+
+export default function createReservation(room: Room, enrollment: Enrollment): Promise<Reservation> {
+  return Reservation.createNew(room, enrollment);
+}

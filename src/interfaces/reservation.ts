@@ -1,6 +1,7 @@
-interface ReservationData{
-  roomId: number,
-  enrollmentId: number
+interface ReservationData {
+    id?: number,
+    roomId: number;
+    enrollmentId: number;
 }
 
 export default ReservationData;

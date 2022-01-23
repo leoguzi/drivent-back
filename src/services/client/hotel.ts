@@ -1,24 +1,28 @@
 import Enrollment from "@/entities/Enrollment";
 import Hotel from "@/entities/Hotel";
 import Room from "@/entities/Room";
+import * as enrollmentService from "./enrollment";
 import ForbiddenError from "@/errors/Forbidden";
 
 export async function getHotelsInfos(userId: number) {
-  const enrollment =  await Enrollment.getByUserIdWithAddress(userId);
+  const enrollment =  await enrollmentService.getEnrollmentWithAddress(userId);
 
   if (!enrollment) {
-    throw new ForbiddenError("User must enroll an event to see the list of hotels");
+    throw new ForbiddenError("Você precisa comprar um ingresso antes de fazer a escolha de hospedagem");
   }
 
-  /* 
-  
-  Funcao incompleta. Falta:
-    procurar o ticket
-        se !withHotel || !paymentDate => lancar erro forbidden
+  const ticket = enrollment.ticket;
 
-  */
+  if (!ticket || !ticket.paymentDate) {
+    throw new ForbiddenError("Você precisa ter confirmado pagamento antes de fazer a escolha de hospedagem");
+  }
+
+  if (!ticket.withHotel) {
+    throw new ForbiddenError("Sua modalidade de ingresso não inclui hospedagem. Prossiga para a escolha de atividades.");
+  }
 
   const hotels = await Hotel.getHotelTypesOfRoomsAndAvailableVacancies();
+  
   return hotels;
 }
 

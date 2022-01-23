@@ -35,4 +35,17 @@ export default class Reservation extends BaseEntity {
 
       await reservation.save();
     }
+
+    setValues(room: Room, enrollment: Enrollment) {
+      this.room = room;
+      this.enrollment = enrollment;
+    }
+  
+    static async createNew(room: Room, enrollment: Enrollment) {
+      const reservation = new Reservation();
+  
+      reservation.setValues(room, enrollment);
+        
+      return Reservation.save(reservation);
+    }
 }

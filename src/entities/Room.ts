@@ -37,4 +37,18 @@ export default class Room extends BaseEntity {
     getAvailableVacancies() {
       return this.vacancies - this.reservations.length;
     }
+
+    setValues(name: string, vacancies: number, hotel: Hotel) {
+      this.name = name;
+      this.vacancies = vacancies;
+      this.hotel = hotel;
+    }
+
+    static async createNew(name: string, vacancies: number, hotel: Hotel) {
+      const room = new Room();
+
+      room.setValues(name, vacancies, hotel);
+      
+      return Room.save(room);
+    }
 }
