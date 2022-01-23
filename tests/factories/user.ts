@@ -1,10 +1,10 @@
 import faker from "faker";
 import User from "../../src/entities/User";
 
-export default function createUser(name: string): Promise<User> {
+export default function createUser(avoidName: string = null): Promise<User> {
   let newName = faker.name.firstName();
 
-  while (name === newName) {
+  while (avoidName === newName) {
     newName = faker.name.firstName();
   }
 
