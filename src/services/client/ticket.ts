@@ -14,7 +14,7 @@ export async function createNewTicket(ticketData: TicketData, userId: number) {
   if (ticketData.type === "online" && ticketData.withHotel) {
     throw new CannotBuyTicketOnlineWithHotelError;
   }
-
+ 
   ticketData.enrollment = enrollment;
   await Ticket.createTicket(ticketData);
 }

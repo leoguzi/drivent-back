@@ -8,7 +8,7 @@ export async function saveTicketInfo(req: Request, res: Response) {
   
   await ticketService.createNewTicket(ticketData, req.user.id);
 
-  res.sendStatus(httpStatus.OK);
+  res.sendStatus(httpStatus.CREATED);
 }
 
 export async function updateTicketInfo(req: Request, res: Response) {
