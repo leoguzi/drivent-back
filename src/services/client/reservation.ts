@@ -1,16 +1,20 @@
 
 import * as enrollmentService from "@/services/client/enrollment";
+import * as hotelService from "@/services/client/hotel";
+
 import Reservation from "@/entities/Reservation";
 import ReservationData from "@/interfaces/reservation";
 import ForbiddenError from "@/errors/Forbidden";
 import NotFoundError from "@/errors/NotFoundError";
+import ConflictError from "@/errors/ConflictError";
 
 export async function createNewReservation(reservationData: ReservationData) {
-  /* 
-  
-  verificar se ainda tem vaga no quarto fornecido
+  const room = await hotelService.getRoomById(reservationData.roomId);
 
-  */
+  if(room.getAvailableVacancies() === 0) {
+    throw new ConflictError("O quarto já está cheio");
+  }
+  
   return await Reservation.createOrUpdate(reservationData);
 }
 

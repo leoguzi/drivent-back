@@ -39,19 +39,34 @@ describe("saveReservationInfo", () => {
     await clearDatabase();
     await createEvent();
 
-    user = await createUser();
-    session = await createSession(user);
-
-    enrollment = await createEnrollment(user);
-    ticket = await createTicket(enrollment, true, true, "presencial");
-
     hotel = await createHotel();
     room = await createRoom(hotel);
 
+    // this is for testing a full room
+    for(let vacancy = 0; vacancy < room.vacancies; vacancy++) {
+      user = await createUser();
+      session = await createSession(user);
+  
+      enrollment = await createEnrollment(user);
+      ticket = await createTicket(enrollment, true, true, "presencial");
+
+      await createReservation(room, enrollment);
+    }
+
+    user = await createUser(user.email);
+    session = await createSession(user);
+  
+    enrollment = await createEnrollment(user);
+    ticket = await createTicket(enrollment, true, true, "presencial");
+    
     sendBody = {
       enrollmentId: enrollment.id, 
       roomId: room.id
     };
+  });
+
+  afterEach(async() => {
+    await clearTable(Reservation);
   });
 
   afterAll(async() => {
@@ -59,7 +74,12 @@ describe("saveReservationInfo", () => {
     await closeConnection();
   });
 
-  it("should return 201", async() => {
+  it("should return 409 (conflict) when room is full", async() => {
+    const result = await supertest(app).post(route).send(sendBody).set({ Authorization: `Bearer ${session.token}` });
+    expect(result.status).toEqual(httpStatus.CONFLICT);
+  });
+
+  it("should return 201 when reservation is created", async() => {
     const result = await supertest(app).post(route).send(sendBody).set({ Authorization: `Bearer ${session.token}` });
     expect(result.status).toEqual(httpStatus.CREATED);
   });
