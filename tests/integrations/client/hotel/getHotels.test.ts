@@ -1,5 +1,4 @@
 import supertest from "supertest";
-import { getConnection } from "typeorm";
 import httpStatus from "http-status";
 
 import app, { init } from "../../../../src/app";

@@ -1,5 +1,5 @@
 import supertest from "supertest";
-import UnauthorizedError from "../../../../src/errors/Unauthorized";
+import httpStatus from "http-status";
 
 import app, { init } from "../../../../src/app";
 import User from "../../../../src/entities/User";
@@ -10,7 +10,6 @@ import Hotel from "../../../../src/entities/Hotel";
 import Room from "../../../../src/entities/Room";
 
 import { clearDatabase, clearTable } from "../../../repositories/deleterRepository";
-import { countReservations } from "../../../repositories/getterRepository";
 import closeConnection from "../../../repositories/closeConnection";
 
 import createEvent from "../../../factories/event";
@@ -22,21 +21,15 @@ import createRoom from "../../../factories/room";
 import createTicket from "../../../factories/ticket";
 import Address from "../../../../src/entities/Address";
 import Reservation from "../../../../src/entities/Reservation";
-import createReservation from "../../../factories/reservation";
-import httpStatus from "http-status";
 
 const route = "/hotels/:id/rooms";
-
-jest.setTimeout(20000);
 
 describe("getHotelRoomsInfo", () => {
   let user: User;
   let session: Session;
   let enrollment: Enrollment;
-  let ticket: Ticket;
   let hotel: Hotel;
   let room: Room;
-  let reservation: Reservation;
   let expectedBody: any;
 
   beforeAll(async() => {
@@ -49,18 +42,17 @@ describe("getHotelRoomsInfo", () => {
     session = await createSession(user);
 
     enrollment = await createEnrollment(user);
-    ticket = await createTicket(enrollment, true, true, "presencial");
+    await createTicket(enrollment, true, true, "presencial");
 
     hotel = await createHotel();
     room = await createRoom(hotel);
-    await createReservation( enrollment, room);
 
     expectedBody = [
       {
         id: room.id,
         name: room.name,
         vacancies: room.vacancies,
-        reservations: await countReservations(room),
+        reservations: await Reservation.count({ roomId: room.id }),
         hotelId: hotel.id
       }
     ];
@@ -122,7 +114,7 @@ describe("getHotelRoomsInfo", () => {
       .get(route.replace(":id", `${hotel.id}`))
       .set({ Authorization: `Bearer ${session.token}` });   
   
-    expect(response.status).toBe(httpStatus.NO_CONTENT);
+    expect(response.status).toBe(httpStatus.NOT_FOUND);
   });
 
   it("Should returns status code 403 when there is no enrollment", async() => {  
