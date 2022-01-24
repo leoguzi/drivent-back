@@ -63,12 +63,20 @@ describe("GET /tickets route", () => {
     await closeConnection();
   });
 
-  it("should return status code 200 and ticket object when authenticated", async() => {
+  it("should return status code 200 (ok) and ticket object when authenticated", async() => {
     const response = await supertest(app)
       .get(route)
       .set("authorization", `Bearer ${session.token}`);
 
     expect(response.status).toBe(httpStatus.OK);
     expect(response.body).toEqual(expectedBody);
+  });
+
+  it("should return status code 401 (unauthorized) when token is invalid", async() => {
+    const response = await supertest(app)
+      .get(route)
+      .set("authorization", `Bearer ${session.token}WRONG`);
+
+    expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 });
