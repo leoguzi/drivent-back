@@ -37,7 +37,7 @@ export default class Ticket extends BaseEntity {
     static async createTicket(data: TicketData) {
       let ticket = await this.findOne({ where: { enrollment: data.enrollment } });
       if (ticket) {
-        throw new ConflictError("Esse usuário já possuí um ingresso");
+        throw new ConflictError("Você já possuí um ingresso");
       }
       ticket = Ticket.create();
       ticket.populateFromData(data);
