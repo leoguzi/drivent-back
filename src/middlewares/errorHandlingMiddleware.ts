@@ -4,21 +4,19 @@ import httpStatus from "http-status";
 import InvalidEmailError from "@/errors/InvalidEmail";
 import CannotEnrollBeforeStartDateError from "@/errors/CannotEnrollBeforeStartDate";
 import InvalidDataError from "@/errors/InvalidData";
+import CannotBuyTicketBeforeEnrollError from "@/errors/CannotBuyTicketBeforeEnrollError";
+import InvalidQueryParameterError from "@/errors/InvalidQueryParameterError";
 import ConflictError from "@/errors/ConflictError";
 import UnauthorizedError from "@/errors/Unauthorized";
 import NotFoundError from "@/errors/NotFoundError";
 import ForbiddenError from "@/errors/Forbidden";
-import CannotBuyTicketBeforeEnrollError from "@/errors/CannotBuyTicketBeforeEnrollError";
 import CannotBuyTicketOnlineWithHotelError from "@/errors/CannotBuyTicketOnlineWithHotelError";
 import NotFoundTicketError from "@/errors/NotFoundTicketError";
 import NoContentError from "@/errors/NoContentError";
-import InvalidQueryParameterError from "@/errors/InvalidQueryParameterError";
 
 /* eslint-disable-next-line */
-export default function errorHandlingMiddleware (err: Error, _req: Request, res: Response, _next: NextFunction) {
+export default function errorHandlingMiddleware(err: Error, _req: Request, res: Response, _next: NextFunction) {
 
-  /* eslint-disable-next-line */
-  //console.error(err);
   if (err instanceof InvalidEmailError) {
     return res.status(httpStatus.BAD_REQUEST).send({
       message: err.message
