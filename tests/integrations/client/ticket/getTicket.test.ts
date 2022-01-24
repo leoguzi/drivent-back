@@ -16,46 +16,35 @@ import createEvent from "../../../factories/event";
 import createUser from "../../../factories/user";
 import createSession from "../../../factories/session";
 import createEnrollment from "../../../factories/enrollment";
-import createHotel from "../../../factories/hotel";
-import createRoom from "../../../factories/room";
 import createTicket from "../../../factories/ticket";
 import Address from "../../../../src/entities/Address";
 
 const route = "/tickets";
 
-describe("GET /tickets route", () => {
+describe("getTicket", () => {
   let user: User;
   let session: Session;
   let enrollment: Enrollment;
   let ticket: Ticket;
-  let hotel: Hotel;
-  let room: Room;
-  let expectedBody: any;
 
   beforeAll(async() => {
     await init();
     await clearDatabase();
 
     await createEvent();
-    
+  });
+
+  beforeEach(async() => {
     user = await createUser();
     session = await createSession(user);
     enrollment = await createEnrollment(user);
-    ticket = await createTicket(enrollment, true, false, "presencial");
-
-    expectedBody = {
-      id: ticket.id,
-      type: ticket.type,
-      paymentDate: ticket.paymentDate,
-      withHotel: ticket.withHotel,
-      value: 600,
-    };
+    ticket = await createTicket(enrollment, true, true, "presencial");
   });
 
   afterEach(async() => {
-    clearTable(Ticket);
-    clearTable(Address);
-    clearTable(Enrollment);
+    await clearTable(Ticket);
+    await clearTable(Address);
+    await clearTable(Enrollment);
   });
 
   afterAll(async() => {
@@ -63,13 +52,45 @@ describe("GET /tickets route", () => {
     await closeConnection();
   });
 
-  it("should return status code 200 (ok) and ticket object when authenticated", async() => {
+  it("should return status code 200 (ok) and ticket without payment date when has no payment", async() => {
+    await clearTable(Ticket);
+    ticket = await createTicket(enrollment, true, false, "presencial");
+
+    const expectedBody = {
+      id: ticket.id,
+      type: ticket.type,
+      paymentDate: ticket.paymentDate,
+      withHotel: ticket.withHotel,
+      value: 600,
+    };
+
     const response = await supertest(app)
       .get(route)
       .set("authorization", `Bearer ${session.token}`);
 
     expect(response.status).toBe(httpStatus.OK);
     expect(response.body).toEqual(expectedBody);
+    expect(response.body.paymentDate).toBeNull();
+  });
+
+  it("should return status code 200 (ok) and complete ticket object when authenticated", async() => {
+    const response = await supertest(app)
+      .get(route)
+      .set("authorization", `Bearer ${session.token}`);
+
+    expect(response.status).toBe(httpStatus.OK);
+    expect(response.body.paymentDate).toBeDefined();
+  });
+
+  it("should return status code 200 (ok) and without hotel ticket object", async() => {
+    await clearTable(Ticket);
+    ticket = await createTicket(enrollment, false, false, "presencial");
+    const response = await supertest(app)
+      .get(route)
+      .set("authorization", `Bearer ${session.token}`);
+
+    expect(response.status).toBe(httpStatus.OK);
+    expect(response.body.withHotel).toBeFalsy();
   });
 
   it("should return status code 401 (unauthorized) when token is invalid", async() => {
@@ -78,5 +99,15 @@ describe("GET /tickets route", () => {
       .set("authorization", `Bearer ${session.token}WRONG`);
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+  });
+
+  it("should return status code 404 (not found) when user has no ticket", async() => {
+    clearTable(Ticket);
+
+    const response = await supertest(app)
+      .get(route)
+      .set("authorization", `Bearer ${session.token}`);
+
+    expect(response.status).toBe(httpStatus.NOT_FOUND);
   });
 });
