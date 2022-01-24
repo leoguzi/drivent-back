@@ -39,7 +39,11 @@ describe("postTicketInfo", () => {
   });
     
   afterEach(async() => {
-    clearDatabase();
+    await clearTable(User);
+    await clearTable(Session);
+    await clearTable(Ticket);
+    await clearTable(Address);
+    await clearTable(Enrollment);
   });
 
   afterAll(async() => {
