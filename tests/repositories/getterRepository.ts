@@ -8,6 +8,3 @@ export async function countReservations(room: Room): Promise<number> {
   return Reservation.count({ roomId: room.id });
 }
 
-export async function getTicket(enrollment: Enrollment) {
-  return Ticket.getTicketByEnroll(enrollment);
-}

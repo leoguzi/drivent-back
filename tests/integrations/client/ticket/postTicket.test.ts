@@ -5,6 +5,7 @@ import app, { init } from "../../../../src/app";
 import User from "../../../../src/entities/User";
 import Session from "../../../../src/entities/Session";
 import Enrollment from "../../../../src/entities/Enrollment";
+import Ticket from "../../../../src/entities/Ticket";
 import Address from "../../../../src/entities/Address";
 
 import createEvent from "../../../factories/event";
@@ -13,7 +14,7 @@ import createSession from "../../../factories/session";
 import createEnrollment from "../../../factories/enrollment";
 
 import { clearDatabase, clearTable } from "../../../repositories/deleterRepository";
-import { getTicket } from "../../../repositories/getterRepository";
+
 import closeConnection from "../../../repositories/closeConnection";
 import httpStatus from "http-status";
 import createTicket from "../../../factories/ticket";
@@ -56,7 +57,7 @@ describe("postTicketInfo", () => {
       .set({ Authorization: `Bearer ${session.token}` })
       .send(ticketInfo);
       
-    const ticket = await getTicket(enrollment);
+    const ticket = await Ticket.getTicketByEnroll(enrollment);
       
     expect(ticket).toEqual({
       id: expect.any(Number),
