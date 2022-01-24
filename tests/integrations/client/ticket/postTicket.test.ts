@@ -6,7 +6,6 @@ import User from "../../../../src/entities/User";
 import Session from "../../../../src/entities/Session";
 import Enrollment from "../../../../src/entities/Enrollment";
 import Address from "../../../../src/entities/Address";
-import Ticket from "../../../../src/entities/Ticket";
 
 import createEvent from "../../../factories/event";
 import createUser from "../../../factories/user";
