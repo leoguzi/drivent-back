@@ -29,10 +29,15 @@ export default class Ticket extends BaseEntity {
       this.enrollment = data.enrollment;
     }
 
+    getValue() {
+      const value = this.type === "online" ? 100 : 250;
+      return (this.withHotel ? value + 350 : value);
+    }
+
     static async createTicket(data: TicketData) {
       let ticket = await this.findOne({ where: { enrollment: data.enrollment } });
       if (ticket) {
-        throw new ConflictError("This user already has a ticket");
+        throw new ConflictError("Você já possuí um ingresso");
       }
       ticket = Ticket.create();
       ticket.populateFromData(data);
@@ -40,12 +45,20 @@ export default class Ticket extends BaseEntity {
       return ticket.save();
     }
 
-    static async updatePaymentDate(enrollment: Enrollment) {
+    static async getTicketByEnroll(enrollment: Enrollment) {
       const ticket = await this.findOne({ where: { enrollment } });
       if (!ticket) {
         throw new NotFoundTicketError;
       }
+      
+      return {
+        ...ticket,
+        value: ticket.getValue(),
+      };
+    }
 
+    static async updatePaymentDate(enrollment: Enrollment) {
       await this.update({ enrollment }, { paymentDate: new Date() });
     }
 }
+

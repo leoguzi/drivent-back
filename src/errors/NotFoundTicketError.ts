@@ -1,6 +1,6 @@
 export default class NotFoundTicketError extends Error {
   constructor() {
-    super("Not Found ticket for user!");
+    super("Não foi encontrado ticket para o usuário");
 
     this.name = "NotFoundTicket";
   }

@@ -33,6 +33,12 @@ export async function findUserReservation(userId: number): Promise<ReservationDa
 
   delete reservation.room.hotel.rooms;
   
-  const formattedReservation: ReservationData = { ...reservation, room: { ...reservation.room, reservations: reservation.room.reservations.length } };
+  const formattedReservation: ReservationData = {
+    ...reservation,
+    room: {
+      ...reservation.room,
+      reservations: reservation.room.reservations.length
+    }
+  };
   return formattedReservation;
 }

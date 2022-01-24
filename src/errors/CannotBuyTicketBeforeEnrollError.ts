@@ -1,6 +1,6 @@
 export default class CannotBuyTicketBeforeEnrollError extends Error {
   constructor() {
-    super("Cannot buy ticket before completting enrollment!");
+    super("Não é possível comprar um ingresso sem estar inscrito");
 
     this.name = "CannotBuyTicketBeforeEnroll";
   }

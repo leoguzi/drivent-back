@@ -10,6 +10,8 @@ import ConflictError from "@/errors/ConflictError";
 import UnauthorizedError from "@/errors/Unauthorized";
 import NotFoundError from "@/errors/NotFoundError";
 import ForbiddenError from "@/errors/Forbidden";
+import CannotBuyTicketOnlineWithHotelError from "@/errors/CannotBuyTicketOnlineWithHotelError";
+import NotFoundTicketError from "@/errors/NotFoundTicketError";
 import NoContentError from "@/errors/NoContentError";
 
 /* eslint-disable-next-line */
@@ -64,12 +66,30 @@ export default function errorHandlingMiddleware(err: Error, _req: Request, res: 
     });
   }
 
+  if (err instanceof CannotBuyTicketOnlineWithHotelError) {
+    return res.status(httpStatus.BAD_REQUEST).send({
+      message: err.message
+    });
+  }
+  
   if (err instanceof ForbiddenError) {
     return res.status(httpStatus.FORBIDDEN).send({
       message: err.message
     });
   }
-    
+
+  if (err instanceof CannotBuyTicketBeforeEnrollError) {
+    return res.status(httpStatus.BAD_REQUEST).send({
+      message: err.message
+    });
+  }
+
+  if (err instanceof NotFoundTicketError) {
+    return res.status(httpStatus.NOT_FOUND).send({
+      message: err.message
+    });
+  }
+  
   if (err instanceof NoContentError) {
     return res.status(httpStatus.NO_CONTENT).send({
       message: err.message

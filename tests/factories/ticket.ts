@@ -3,8 +3,8 @@ import Ticket from "../../src/entities/Ticket";
 
 export default async function createTicket(
   enrollment: Enrollment,
-  withHotel=true,
-  paidTicket=true,
+  withHotel = true,
+  paidTicket = true,
   type = "presencial"
 ): Promise<Ticket> {
   const ticket = await Ticket.createTicket({ enrollment, withHotel, type });
