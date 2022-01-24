@@ -2,6 +2,8 @@ import Hotel from "@/entities/Hotel";
 import * as enrollmentService from "./enrollment";
 import ForbiddenError from "@/errors/Forbidden";
 import NoContentError from "@/errors/NoContentError";
+import NotFoundError from "@/errors/NotFoundError";
+import Room from "@/entities/Room";
 
 export async function getHotelsInfos(userId: number) {
   const enrollment =  await enrollmentService.getEnrollmentWithAddress(userId);
@@ -39,7 +41,7 @@ export async function getHotelRooms(hotelId: number, userId: number) {
   const hotel: Hotel = await Hotel.findOne({ id: hotelId });
 
   if(!hotel) {
-    throw new NoContentError("Não há hotéis cadastrados");
+    throw new NotFoundError("Não há hotéis cadastrados");
   }
 
   const rooms = hotel.getRooms();
@@ -49,5 +51,9 @@ export async function getHotelRooms(hotelId: number, userId: number) {
   }
 
   return rooms;
+}
+
+export async function getRoomById(roomId: number) {
+  return Room.findOne(roomId);
 }
 

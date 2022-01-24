@@ -1,6 +1,6 @@
 export default class NotFoundError extends Error {
-  constructor() {
-    super("No result for this search!");
+  constructor(message: string) {
+    super(message);
 
     this.name = "NotFoundError";
   }
