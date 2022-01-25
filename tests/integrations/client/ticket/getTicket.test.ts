@@ -6,8 +6,6 @@ import User from "../../../../src/entities/User";
 import Session from "../../../../src/entities/Session";
 import Enrollment from "../../../../src/entities/Enrollment";
 import Ticket from "../../../../src/entities/Ticket";
-import Hotel from "../../../../src/entities/Hotel";
-import Room from "../../../../src/entities/Room";
 
 import { clearDatabase, clearTable } from "../../../repositories/deleterRepository";
 import closeConnection from "../../../repositories/closeConnection";
@@ -17,7 +15,6 @@ import createUser from "../../../factories/user";
 import createSession from "../../../factories/session";
 import createEnrollment from "../../../factories/enrollment";
 import createTicket from "../../../factories/ticket";
-import Address from "../../../../src/entities/Address";
 
 const route = "/tickets";
 
