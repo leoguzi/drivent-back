@@ -7,6 +7,6 @@ const router = Router();
 
 router.post("/", schemaValidatingMiddleware(ticketSchema), ticketController.saveTicketInfo);
 router.get("/", ticketController.getTicketInfo);
-router.post("/payment", ticketController.updateTicketInfo);
+router.put("/payment", ticketController.updateTicketInfo);
 
 export default router;
