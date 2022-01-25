@@ -32,19 +32,18 @@ describe("getTicket", () => {
     await clearDatabase();
 
     await createEvent();
-  });
 
-  beforeEach(async() => {
     user = await createUser();
     session = await createSession(user);
     enrollment = await createEnrollment(user);
-    ticket = await createTicket(enrollment, true, true, "presencial");
+  });
+
+  beforeEach(async() => {
+    ticket = await createTicket(enrollment, true, false, "presencial");
   });
 
   afterEach(async() => {
     await clearTable(Ticket);
-    await clearTable(Address);
-    await clearTable(Enrollment);
   });
 
   afterAll(async() => {
@@ -53,9 +52,6 @@ describe("getTicket", () => {
   });
 
   it("should return status code 200 (ok) and ticket without payment date when has no payment", async() => {
-    await clearTable(Ticket);
-    ticket = await createTicket(enrollment, true, false, "presencial");
-
     const expectedBody = {
       id: ticket.id,
       type: ticket.type,
@@ -64,8 +60,7 @@ describe("getTicket", () => {
       value: 600,
     };
 
-    const response = await supertest(app)
-      .get(route)
+    const response = await supertest(app).get(route)
       .set("authorization", `Bearer ${session.token}`);
 
     expect(response.status).toBe(httpStatus.OK);
@@ -74,8 +69,7 @@ describe("getTicket", () => {
   });
 
   it("should return status code 200 (ok) and complete ticket object when authenticated", async() => {
-    const response = await supertest(app)
-      .get(route)
+    const response = await supertest(app).get(route)
       .set("authorization", `Bearer ${session.token}`);
 
     expect(response.status).toBe(httpStatus.OK);
