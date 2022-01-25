@@ -30,20 +30,14 @@ describe("postTicketInfo", () => {
     await init();
     await clearDatabase();
     await createEvent();
-  });
-    
-  beforeEach(async() => {
+
     user = await createUser();
     session = await createSession(user);
     enrollment = await createEnrollment(user);
   });
     
   afterEach(async() => {
-    await clearTable(User);
-    await clearTable(Session);
     await clearTable(Ticket);
-    await clearTable(Address);
-    await clearTable(Enrollment);
   });
 
   afterAll(async() => {
