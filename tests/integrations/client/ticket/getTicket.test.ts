@@ -6,8 +6,6 @@ import User from "../../../../src/entities/User";
 import Session from "../../../../src/entities/Session";
 import Enrollment from "../../../../src/entities/Enrollment";
 import Ticket from "../../../../src/entities/Ticket";
-import Hotel from "../../../../src/entities/Hotel";
-import Room from "../../../../src/entities/Room";
 
 import { clearDatabase, clearTable } from "../../../repositories/deleterRepository";
 import closeConnection from "../../../repositories/closeConnection";
@@ -17,7 +15,6 @@ import createUser from "../../../factories/user";
 import createSession from "../../../factories/session";
 import createEnrollment from "../../../factories/enrollment";
 import createTicket from "../../../factories/ticket";
-import Address from "../../../../src/entities/Address";
 
 const route = "/tickets";
 
@@ -32,19 +29,18 @@ describe("getTicket", () => {
     await clearDatabase();
 
     await createEvent();
-  });
 
-  beforeEach(async() => {
     user = await createUser();
     session = await createSession(user);
     enrollment = await createEnrollment(user);
-    ticket = await createTicket(enrollment, true, true, "presencial");
+  });
+
+  beforeEach(async() => {
+    ticket = await createTicket(enrollment, true, false, "presencial");
   });
 
   afterEach(async() => {
     await clearTable(Ticket);
-    await clearTable(Address);
-    await clearTable(Enrollment);
   });
 
   afterAll(async() => {
@@ -53,9 +49,6 @@ describe("getTicket", () => {
   });
 
   it("should return status code 200 (ok) and ticket without payment date when has no payment", async() => {
-    await clearTable(Ticket);
-    ticket = await createTicket(enrollment, true, false, "presencial");
-
     const expectedBody = {
       id: ticket.id,
       type: ticket.type,
@@ -64,8 +57,7 @@ describe("getTicket", () => {
       value: 600,
     };
 
-    const response = await supertest(app)
-      .get(route)
+    const response = await supertest(app).get(route)
       .set("authorization", `Bearer ${session.token}`);
 
     expect(response.status).toBe(httpStatus.OK);
@@ -74,8 +66,7 @@ describe("getTicket", () => {
   });
 
   it("should return status code 200 (ok) and complete ticket object when authenticated", async() => {
-    const response = await supertest(app)
-      .get(route)
+    const response = await supertest(app).get(route)
       .set("authorization", `Bearer ${session.token}`);
 
     expect(response.status).toBe(httpStatus.OK);
