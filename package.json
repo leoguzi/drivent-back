@@ -17,10 +17,12 @@
     "migration:deploy": "npm run build && npm run typeorm migration:run",
     "eslint": "npx eslint src",
     "eslint:fix": "npx eslint --fix src",
-    "seed": "NODE_ENV=development ts-node -r tsconfig-paths/register ./src/seeders && NODE_ENV=test ts-node -r tsconfig-paths/register ./src/seeders ",
+    "seed": "NODE_ENV=development ts-node -r tsconfig-paths/register ./src/seeders",
+    "seed:deploy": "NODE_ENV=production NODE_TLS_REJECT_UNAUTHORIZED=0 ts-node -r tsconfig-paths/register ./src/seeders",
     "prepare": "husky install",
     "deploy": "npm run migration:run && git push heroku main"
   },
+  
   "keywords": [],
   "author": "",
   "license": "ISC",

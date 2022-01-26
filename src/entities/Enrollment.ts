@@ -6,10 +6,12 @@ import {
   PrimaryGeneratedColumn,
   Column,
   OneToOne,
+  ManyToMany,
 } from "typeorm";
 import Address from "@/entities/Address";
 import Reservation from "./Reservation";
 import Ticket from "./Ticket";
+import Activity from "./Activity";
 
 @Entity("enrollments")
 export default class Enrollment extends BaseEntity {
@@ -42,6 +44,10 @@ export default class Enrollment extends BaseEntity {
   
   @OneToOne(() => Ticket, (ticket: Ticket) => ticket.enrollment, { eager: true })
   ticket: Ticket;
+
+  @ManyToMany(() => Activity, (activity: Activity) => activity.enrollment)
+  
+  activities: Activity[];
 
   populateFromData(data: EnrollmentData) {
     this.name = data.name;
