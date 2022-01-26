@@ -3,6 +3,190 @@ seeds:
         id: 1
         name: "Workshop receitas com abacate"
         startDate: "2022-01-31 09:00"
+        endDate: "2022-01-31 11:00"
+        location: "workshop_room"
+        vacancies: 30
+    - Activity:
+        id: 2
+        name: "Flores de cacto: Como fotografar com perfeição"
+        startDate: "2022-01-31 11:00"
+        endDate: "2022-01-31 12:00"
+        location: "workshop_room"
+        vacancies: 15
+    - Activity:
+        id: 3
+        name: "Diversão: uma atividade muito divertida!"
+        startDate: "2022-01-31 09:00"
         endDate: "2022-01-31 10:00"
         location: "main_auditorium"
+        vacancies: 30
+    - Activity:
+        id: 4
+        name: "Conjuntinho da vovó: Como escolher o sapatênis ideal para completar o look."
+        startDate: "2022-01-31 13:00"
+        endDate: "2022-01-31 14:00"
+        location: "main_auditorium"
+        vacancies: 30
+    - Activity:
+        id: 5
+        name: "Atividade muito da hora."
+        startDate: "2022-01-31 9:00"
+        endDate: "2022-01-31 10:00"
+        location: "side_auditorium"
+        vacancies: 25
+    - Activity:
+        id: 6
+        name: "Atividade muito da hora 2."
+        startDate: "2022-01-31 10:00"
+        endDate: "2022-01-31 11:00"
+        location: "side_auditorium"
+        vacancies: 20
+    - Activity:
+        id: 7
+        name: "Atividade muito da hora 3."
+        startDate: "2022-01-31 13:00"
+        endDate: "2022-01-31 16:00"
+        location: "side_auditorium"
+        vacancies: 25
+    - Activity:
+        id: 8
+        name: "Atividade muito da hora 1."
+        startDate: "2022-02-01 9:00"
+        endDate: "2022-02-01 10:30"
+        location: "main_auditorium"
+        vacancies: 45
+    - Activity:
+        id: 9
+        name: "Atividade muito da hora 2."
+        startDate: "2022-02-01 10:30"
+        endDate: "2022-02-01 12:00"
+        location: "main_auditorium"
+        vacancies: 45
+    - Activity:
+        id: 10
+        name: "Atividade muito da hora 2."
+        startDate: "2022-02-01 13:00"
+        endDate: "2022-02-01 15:30"
+        location: "main_auditorium"
+        vacancies: 25
+    - Activity:
+        id: 11
+        name: "Atividade muito da hora 2."
+        startDate: "2022-02-01 15:30"
+        endDate: "2022-02-01 18:00"
+        location: "main_auditorium"
+        vacancies: 30
+    - Activity:
+        id: 12
+        name: "Atividade muito da hora 1."
+        startDate: "2022-02-01 9:00"
+        endDate: "2022-02-01 10:30"
+        location: "side_auditorium"
+        vacancies: 15
+    - Activity:
+        id: 13
+        name: "Atividade muito da hora 2."
+        startDate: "2022-02-01 10:30"
+        endDate: "2022-02-01 12:00"
+        location: "side_auditorium"
+        vacancies: 30
+    - Activity:
+        id: 14
+        name: "Atividade muito da hora 2."
+        startDate: "2022-02-01 13:00"
+        endDate: "2022-02-01 15:30"
+        location: "side_auditorium"
+        vacancies: 25
+    - Activity:
+        id: 15
+        name: "Atividade muito da hora 2."
+        startDate: "2022-02-01 15:30"
+        endDate: "2022-02-01 18:00"
+        location: "side_auditorium"
+        vacancies: 25
+    - Activity:
+        id: 16
+        name: "Workshop: Aprenda uma coisa aleatória em 2 horas!"
+        startDate: "2022-02-01 09:00"
+        endDate: "2022-02-01 11:00"
+        location: "workshop_room"
+        vacancies: 10
+    - Activity:
+        id: 17
+        name: "Workshop: Mais um workshop aleatório. Participe! Vai ser legal :)"
+        startDate: "2022-02-01 14:00"
+        endDate: "2022-02-01 16:00"
+        location: "workshop_room"
+        vacancies: 10
+    - Activity:
+        id: 18
+        name: "Workshop receitas com abacate"
+        startDate: "2022-02-02 09:30"
+        endDate: "2022-02-02 11:30"
+        location: "workshop_room"
+        vacancies: 15
+    - Activity:
+        id: 19
+        name: "Workshop: Mais um workshop aleatório. Participe! Vai ser legal :)"
+        startDate: "2022-02-02 13:00"
+        endDate: "2022-02-02 15:00"
+        location: "workshop_room"
+        vacancies: 20
+    - Activity:
+        id: 20
+        name: "Workshop: Aprenda uma coisa aleatória em 2 horas!"
+        startDate: "2022-02-02 15:00"
+        endDate: "2022-02-02 17:00"
+        location: "workshop_room"
+        vacancies: 10
+    - Activity:
+        id: 21
+        name: "Atividade muito da hora 1."
+        startDate: "2022-02-02 9:00"
+        endDate: "2022-02-02 10:30"
+        location: "main_auditorium"
+        vacancies: 40
+    - Activity:
+        id: 22
+        name: "Atividade muito da hora 2."
+        startDate: "2022-02-02 10:30"
+        endDate: "2022-02-02 12:00"
+        location: "main_auditorium"
+        vacancies: 50
+    - Activity:
+        id: 23
+        name: "Atividade muito da hora 2."
+        startDate: "2022-02-02 13:00"
+        endDate: "2022-02-02 15:30"
+        location: "main_auditorium"
+        vacancies: 45
+    - Activity:
+        id: 24
+        name: "Atividade muito da hora 2."
+        startDate: "2022-02-02 15:30"
+        endDate: "2022-02-02 18:00"
+        location: "main_auditorium"
+        vacancies: 35
+    - Activity:
+        id: 25
+        name: "Atividade muito da hora."
+        startDate: "2022-02-02 9:00"
+        endDate: "2022-02-02 10:00"
+        location: "side_auditorium"
+        vacancies: 20
+    - Activity:
+        id: 26
+        name: "Atividade muito da hora 2."
+        startDate: "2022-02-02 10:00"
+        endDate: "2022-02-02 11:00"
+        location: "side_auditorium"
+        vacancies: 25
+    - Activity:
+        id: 27
+        name: "Atividade muito da hora 3."
+        startDate: "2022-02-02 13:00"
+        endDate: "2022-02-02 16:00"
+        location: "side_auditorium"
+        vacancies: 20
+    
 
