@@ -1,0 +1,8 @@
+seeds:
+    - Activity:
+        id: 1
+        name: "Workshop receitas com abacate"
+        startDate: "2022-01-31 09:00"
+        endDate: "2022-01-31 10:00"
+        location: "main_auditorium"
+
