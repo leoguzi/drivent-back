@@ -17,10 +17,10 @@ id: number;
 @Column()
 name: string;
 
-@Column({ type: "timestamp" })
+@Column({ type: "timestamp with time zone" })
 startDate: Date;
     
-@Column({ type: "timestamp" })
+@Column({ type: "timestamp with time zone" })
 endDate: Date;
 
 @Column()
