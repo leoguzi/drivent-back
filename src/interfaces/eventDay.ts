@@ -1,10 +1,10 @@
-import Activity from "@/entities/Activity";
+import ActivityData from "./activity";
 
 interface EventDay {
     date: string
-    mainAuditorium: Activity[],
-    sideAuditorium: Activity[],
-    workshopRoom: Activity[]
+    mainAuditorium: ActivityData[],
+    sideAuditorium: ActivityData[],
+    workshopRoom: ActivityData[]
 }
 
 export default EventDay;
