@@ -39,18 +39,21 @@ export default class Activity extends BaseEntity {
   static async getAllActivities(): Promise<EventDay[]> {
     const activities = await Activity.find({ relations: ["enrollment"] });
 
-    const activitiesWithSubscriptions: ActivityData[] = activities.map((activity: Activity) => ({
-      ...activity,
-      subscriptions: activity.enrollment.length,
-      availableVacancies: activity.vacancies - activity.enrollment.length
-    }));
-    activitiesWithSubscriptions.forEach((activity) => delete activity.enrollment);
+    const activitiesWithSubscriptionsAndAvailabeVacancies: ActivityData[] = activities.map((activity: Activity) => {
+      const formattedActivity = {
+        ...activity,
+        subscriptions: activity.enrollment.length,
+        availableVacancies: activity.vacancies - activity.enrollment.length
+      };
+      delete formattedActivity.enrollment;
+      return formattedActivity;
+    });
     
     const activitiesByDay= {} as {
       [key: string]: ActivityData[];
     };
     
-    activitiesWithSubscriptions.map((activity) => {
+    activitiesWithSubscriptionsAndAvailabeVacancies.map((activity) => {
       const date = activity.startDate.toLocaleDateString("pt-br", {
         day: "numeric",
         month: "numeric",
