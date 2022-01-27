@@ -10,6 +10,7 @@ import {
 
 import EventDay from "@/interfaces/eventDay";
 import Enrollment from "./Enrollment";
+import ActivityData from "@/interfaces/activity";
 
 @Entity("activities")
 export default class Activity extends BaseEntity {
@@ -36,21 +37,29 @@ export default class Activity extends BaseEntity {
   enrollment: Enrollment[];
   
   static async getAllActivities(): Promise<EventDay[]> {
-    const activities = await Activity.find();
+    const activities = await Activity.find({ relations: ["enrollment"] });
+
     const activitiesByDay= {} as {
-      [key: string]: Activity[];
+      [key: string]: ActivityData[];
     };
-    
-    activities.map((activity) => {
+
+    activities.map((activity: Activity) => {
+      const formattedActivity = {
+        ...activity,
+        subscriptions: activity.enrollment.length,
+        availableVacancies: activity.vacancies - activity.enrollment.length
+      };
+      delete formattedActivity.enrollment;
+
       const date = activity.startDate.toLocaleDateString("pt-br", {
         day: "numeric",
         month: "numeric",
         weekday: "long"
       });
       if (activitiesByDay[date]) {
-        activitiesByDay[date].push(activity);
+        activitiesByDay[date].push(formattedActivity);
       }
-      else { activitiesByDay[date] = [activity]; }
+      else { activitiesByDay[date] = [formattedActivity]; }
     });
 
     const eventsDayByLocation: EventDay[] = [];
