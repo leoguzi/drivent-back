@@ -20,7 +20,7 @@ export default class Room extends BaseEntity {
     @JoinColumn({ name: "hotelId" })
     hotel: Hotel;
 
-    @OneToMany(() => Reservation, (reservation) =>  reservation.room, { eager: true })
+    @OneToMany(() => Reservation, (reservation) =>  reservation.room)
     reservations: Reservation[];
 
     getRoomType() {
@@ -38,7 +38,7 @@ export default class Room extends BaseEntity {
       return this.vacancies - this.reservations.length;
     }
 
-    setValues(name: string, vacancies: number, hotel: Hotel) {
+    private setValues(name: string, vacancies: number, hotel: Hotel) {
       this.name = name;
       this.vacancies = vacancies;
       this.hotel = hotel;
@@ -50,5 +50,13 @@ export default class Room extends BaseEntity {
       room.setValues(name, vacancies, hotel);
       
       return Room.save(room);
+    }
+
+    static async getOneByParameter(parameter: {[index: string]: any}, relations: string[] = null) {
+      return this.findOne({ where: parameter, relations });
+    }
+
+    static async getOneByIdWithReservations(roomId: number) {
+      return this.getOneByParameter({ id: roomId }, ["reservations"]);
     }
 }

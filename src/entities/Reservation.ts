@@ -1,7 +1,8 @@
-import ReservationData from "@/interfaces/reservation";
 import { BaseEntity, Column, Entity, JoinColumn, ManyToOne,  OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import Enrollment from "./Enrollment";
 import Room from "./Room";
+import NotFoundError from "@/errors/NotFoundError";
+import ReservationData from "@/interfaces/reservation";
 
 @Entity("reservations")
 export default class Reservation extends BaseEntity {
@@ -32,9 +33,13 @@ export default class Reservation extends BaseEntity {
     }
 
     static async getOneByEnrollment(enrollment: Enrollment) {
-      const ticket = await this.getOneByParameter({ enrollment }, ["room", "room.hotel", "room.reservations"]);
+      const reservation = await this.getOneByParameter({ enrollment }, ["room", "room.hotel", "room.reservations"]);
       
-      return ticket;
+      if (!reservation) {
+        throw new NotFoundError("Você não possui reservas");
+      }
+
+      return reservation;
     }
 
     static async createOrUpdate(data: ReservationData) {
