@@ -1,14 +1,9 @@
-import Enrollment from "@/entities/Enrollment";
+import Activity from "@/domain/Activity";
+import Enrollment from "@/domain/Enrollment";
 
-interface ActivityData {
-  id?: number,
-  name: string,
-  startDate: Date, 
-  endDate: Date,
-  vacancies: number,    
+interface ActivityData extends Activity{
   subscriptions: number,
   availableVacancies: number,
-  location: string,  
   enrollment?: Enrollment[]
 }
 

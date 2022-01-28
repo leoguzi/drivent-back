@@ -7,7 +7,7 @@ interface Address {
   state: string;
   neighborhood: string;
   addressDetail: string;
-  enrollmentId: number;
+  enrollmentId?: number;
 }
 
 export default Address;

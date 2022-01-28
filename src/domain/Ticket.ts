@@ -1,7 +1,7 @@
 interface Ticket {
   id?: number;
   type: string;
-  paymentDate: Date | null;
+  paymentDate?: Date | null;
   withHotel: boolean;
 }  
   

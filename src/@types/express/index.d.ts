@@ -1,5 +1,5 @@
-import Enrollment from "@/entities/Enrollment";
-import Ticket from "@/entities/Ticket";
+import Enrollment from "@/domain/Enrollment";
+import Ticket from "@/domain/Ticket";
 
 interface User {
   id: number;
