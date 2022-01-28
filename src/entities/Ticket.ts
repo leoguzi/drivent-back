@@ -1,8 +1,8 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from "typeorm";
 
-import ConflictError from "@/errors/ConflictError";
 import TicketData from "@/interfaces/ticket";
 import Enrollment from "./Enrollment";
+import ConflictError from "@/errors/ConflictError";
 import NotFoundTicketError from "@/errors/NotFoundTicketError";
 
 @Entity("tickets")
@@ -45,20 +45,30 @@ export default class Ticket extends BaseEntity {
       return ticket.save();
     }
 
-    static async getTicketByEnroll(enrollment: Enrollment) {
-      const ticket = await this.findOne({ where: { enrollment } });
+    static async updatePaymentDate(ticket: Ticket) {
+      await this.update(ticket, { paymentDate: new Date() });
+    }
+
+    static async getOneByParameter(parameter: {[index: string]: any}, relations: string[] = null) {
+      const ticket = await this.findOne({ where: parameter, relations });
+
       if (!ticket) {
         throw new NotFoundTicketError;
       }
       
+      return ticket;
+    }
+
+    static async getTicketByEnroll(enrollment: Enrollment) {
+      return Ticket.getOneByParameter({ enrollment });
+    }
+    
+    static async getTicketWithValueByEnroll(enrollment: Enrollment) {
+      const ticket = await Ticket.getOneByParameter({ enrollment });
+      
       return {
         ...ticket,
-        value: ticket.getValue(),
+        value: ticket.getValue()
       };
     }
-
-    static async updatePaymentDate(enrollment: Enrollment) {
-      await this.update({ enrollment }, { paymentDate: new Date() });
-    }
 }
-

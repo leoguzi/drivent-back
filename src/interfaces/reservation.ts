@@ -3,7 +3,7 @@ import RoomData from "./room";
 interface ReservationData {
     id?: number,
     roomId: number;
-    enrollmentId: number;
+    enrollment?: any;
     room?: RoomData;
 }
 

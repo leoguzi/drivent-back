@@ -34,7 +34,6 @@ export default class Enrollment extends BaseEntity {
   userId: number;
 
   @OneToOne(() => Address, (address: Address) => address.enrollment, {
-    eager: true,
     cascade: ["insert", "update"],
   })
   address: Address;
@@ -42,11 +41,10 @@ export default class Enrollment extends BaseEntity {
   @OneToOne(() => Reservation, (reservation) => reservation.enrollment)
   reservation: Reservation;
   
-  @OneToOne(() => Ticket, (ticket: Ticket) => ticket.enrollment, { eager: true })
+  @OneToOne(() => Ticket, (ticket: Ticket) => ticket.enrollment)
   ticket: Ticket;
 
   @ManyToMany(() => Activity, (activity: Activity) => activity.enrollment)
-  
   activities: Activity[];
 
   populateFromData(data: EnrollmentData) {
@@ -81,7 +79,15 @@ export default class Enrollment extends BaseEntity {
     return enrollment.save();
   }
 
-  static async getByUserIdWithAddress(userId: number) {
-    return await this.findOne({ where: { userId } });
+  static async getOneByParameter(parameter: {[index: string]: any}, relations: string[] = null) {
+    return Enrollment.findOne({ where: parameter, relations });
+  }
+
+  static async getOneByParameterWithAddress(parameter: {[index: string]: any}) {
+    return Enrollment.getOneByParameter(parameter, ["address"]);
+  }
+
+  static async getOneByParameterWithTicket(parameter: {[index: string]: any}) {
+    return Enrollment.getOneByParameter(parameter, ["ticket"]);
   }
 }
