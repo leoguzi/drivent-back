@@ -10,7 +10,7 @@ export default async function createTicket(
   const ticket = await Ticket.createTicket({ enrollment, withHotel, type });
 
   if (paidTicket) {
-    await Ticket.updatePaymentDate(enrollment);
+    await Ticket.updatePaymentDate(ticket);
   }
 
   return ticket;

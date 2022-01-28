@@ -55,7 +55,7 @@ describe("postTicketInfo", () => {
       .set({ Authorization: `Bearer ${session.token}` })
       .send(ticketInfo);
       
-    const ticket = await Ticket.getTicketByEnroll(enrollment);
+    const ticket = await Ticket.getTicketWithValueByEnroll(enrollment);
       
     expect(ticket).toEqual({
       id: expect.any(Number),
@@ -96,7 +96,7 @@ describe("postTicketInfo", () => {
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
     
-  it("Should return status code 400 if user is not enrolled", async() => {
+  it("Should return status code 403 (Forbidden) if user is not enrolled", async() => {
     const ticketInfo = {
       type: "presential",
       withHotel: true
@@ -109,6 +109,6 @@ describe("postTicketInfo", () => {
       .set({ Authorization: `Bearer ${session.token}` })
       .send(ticketInfo);
     
-    expect(response.status).toBe(httpStatus.BAD_REQUEST);
+    expect(response.status).toBe(httpStatus.FORBIDDEN);
   });
 });
