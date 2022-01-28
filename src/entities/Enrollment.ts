@@ -79,15 +79,15 @@ export default class Enrollment extends BaseEntity {
     return enrollment.save();
   }
 
-  static async getOneByParameter(parameter: {[index: string]: any}, relations: string[] = null) {
+  static async getOneByParameter(parameter: {[index: string]: unknown}, relations: string[] = null) {
     return Enrollment.findOne({ where: parameter, relations });
   }
 
-  static async getOneByParameterWithAddress(parameter: {[index: string]: any}) {
+  static async getOneByParameterWithAddress(parameter: {[index: string]: unknown}) {
     return Enrollment.getOneByParameter(parameter, ["address"]);
   }
 
-  static async getOneByParameterWithTicket(parameter: {[index: string]: any}) {
+  static async getOneByParameterWithTicket(parameter: {[index: string]: unknown}) {
     return Enrollment.getOneByParameter(parameter, ["ticket"]);
   }
 }

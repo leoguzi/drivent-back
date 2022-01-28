@@ -49,7 +49,7 @@ export default class Ticket extends BaseEntity {
       await this.update(ticket, { paymentDate: new Date() });
     }
 
-    static async getOneByParameter(parameter: {[index: string]: any}, relations: string[] = null) {
+    static async getOneByParameter(parameter: {[index: string]: unknown}, relations: string[] = null) {
       const ticket = await this.findOne({ where: parameter, relations });
 
       if (!ticket) {

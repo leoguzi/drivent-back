@@ -52,7 +52,7 @@ export default class Room extends BaseEntity {
       return Room.save(room);
     }
 
-    static async getOneByParameter(parameter: {[index: string]: any}, relations: string[] = null) {
+    static async getOneByParameter(parameter: {[index: string]: unknown}, relations: string[] = null) {
       return this.findOne({ where: parameter, relations });
     }
 

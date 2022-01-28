@@ -30,11 +30,11 @@ export default class Hotel extends BaseEntity {
       return Hotel.save(hotel);
     }
 
-    static async getOneByParameter(parameter: {[index: string]: any}, relations: string[] = null) {
+    static async getOneByParameter(parameter: {[index: string]: unknown}, relations: string[] = null) {
       return Hotel.findOne({ where: parameter, relations });
     }
 
-    static async getByParameter(parameter: {[index: string]: any}, relations: string[] = null) {
+    static async getByParameter(parameter: {[index: string]: unknown}, relations: string[] = null) {
       return Hotel.find({ where: parameter, relations });
     }
 

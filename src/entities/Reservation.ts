@@ -28,7 +28,7 @@ export default class Reservation extends BaseEntity {
       this.roomId = data.roomId;
     }
 
-    static async getOneByParameter(parameter: {[index: string]: any}, relations: string[] = null) {
+    static async getOneByParameter(parameter: {[index: string]: unknown}, relations: string[] = null) {
       return this.findOne({ where: parameter, relations });
     }
 
