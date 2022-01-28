@@ -1,9 +1,10 @@
 import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import IRoom from "../domain/Room";
 import Hotel from "./Hotel";
 import Reservation from "./Reservation";
 
 @Entity("rooms")
-export default class Room extends BaseEntity {
+export default class Room extends BaseEntity implements IRoom {
     @PrimaryGeneratedColumn()
     id: number;
 

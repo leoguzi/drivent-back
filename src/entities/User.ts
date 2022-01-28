@@ -1,9 +1,10 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 import bcrypt from "bcrypt";
+import IUser from "../domain/User";
 import EmailNotAvailableError from "@/errors/EmailNotAvailable";
 
 @Entity("users")
-export default class User extends BaseEntity {
+export default class User extends BaseEntity implements IUser {
   @PrimaryGeneratedColumn()
   id: number;
 

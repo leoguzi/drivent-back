@@ -1,12 +1,12 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from "typeorm";
-
-import TicketData from "@/interfaces/ticket";
+import ITicket from "../domain/Ticket";
 import Enrollment from "./Enrollment";
+import TicketData from "@/interfaces/ticket";
 import ConflictError from "@/errors/ConflictError";
 import NotFoundTicketError from "@/errors/NotFoundTicketError";
 
 @Entity("tickets")
-export default class Ticket extends BaseEntity {
+export default class Ticket extends BaseEntity implements ITicket {
     @PrimaryGeneratedColumn()
     id: number;
     
