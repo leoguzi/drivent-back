@@ -7,3 +7,7 @@ export async function getAllActivities(req: Request, res: Response) {
     
   res.send(activities).status(httpStatus.OK);
 }
+
+export async function activityCheckin(req: Request, res: Response) {  
+  return res.sendStatus(httpStatus.NOT_IMPLEMENTED);
+}
