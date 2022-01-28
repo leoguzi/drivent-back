@@ -1,5 +1,6 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from "typeorm";
 import ITicket from "../domain/Ticket";
+import IEnrollment from "@/domain/Enrollment";
 import Enrollment from "./Enrollment";
 import TicketData from "@/interfaces/ticket";
 import ConflictError from "@/errors/ConflictError";
@@ -19,6 +20,9 @@ export default class Ticket extends BaseEntity implements ITicket {
     @Column()
     withHotel: boolean;
 
+    @Column()
+    enrollmentId: number;
+
     @OneToOne(() => Enrollment, (enrollment) => enrollment.ticket)
     @JoinColumn()
     enrollment: Enrollment;
@@ -26,7 +30,7 @@ export default class Ticket extends BaseEntity implements ITicket {
     populateFromData(data: TicketData) {
       this.type = data.type;
       this.withHotel = data.withHotel;
-      this.enrollment = data.enrollment;
+      this.enrollmentId = data.enrollment.id;
     }
 
     getValue() {
@@ -59,11 +63,11 @@ export default class Ticket extends BaseEntity implements ITicket {
       return ticket;
     }
 
-    static async getTicketByEnroll(enrollment: Enrollment) {
+    static async getTicketByEnroll(enrollment: IEnrollment) {
       return Ticket.getOneByParameter({ enrollment });
     }
     
-    static async getTicketWithValueByEnroll(enrollment: Enrollment) {
+    static async getTicketWithValueByEnroll(enrollment: IEnrollment) {
       const ticket = await Ticket.getOneByParameter({ enrollment });
       
       return {

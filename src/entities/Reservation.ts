@@ -1,6 +1,7 @@
 import { BaseEntity, Column, Entity, JoinColumn, ManyToOne,  OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import IReservation from "../domain/Reservation";
 import Enrollment from "./Enrollment";
+import IEnrollment from "@/domain/Enrollment";
 import Room from "./Room";
 import ReservationData from "@/interfaces/reservation";
 import NotFoundError from "@/errors/NotFoundError";
@@ -25,7 +26,7 @@ export default class Reservation extends BaseEntity implements IReservation {
     enrollment: Enrollment;
 
     populateFromData(data: ReservationData) {
-      this.enrollment = data.enrollment;
+      this.enrollmentId = data.enrollment.id;
       this.roomId = data.roomId;
     }
 
@@ -33,7 +34,7 @@ export default class Reservation extends BaseEntity implements IReservation {
       return this.findOne({ where: parameter, relations });
     }
 
-    static async getOneByEnrollment(enrollment: Enrollment) {
+    static async getOneByEnrollment(enrollment: IEnrollment) {
       const reservation = await this.getOneByParameter({ enrollment }, ["room", "room.hotel", "room.reservations"]);
       
       if (!reservation) {
