@@ -49,34 +49,41 @@ export default class Enrollment extends BaseEntity implements IEnrollment {
   @ManyToMany(() => Activity, (activity: Activity) => activity.enrollment)
   activities: Activity[];
 
-  populateFromData(data: EnrollmentData) {
+  async populateFromData(data: EnrollmentData) {
     this.name = data.name;
     this.cpf = data.cpf;
     this.birthday = data.birthday;
     this.phone = data.phone;
     this.userId = data.userId;
 
-    this.address ||= Address.create();
-    const { address } = this;
+    if(data.address) {
+      this.address ||= Address.create();
+      const { address } = this;
+  
+      address.cep = data.address.cep;
+      address.street = data.address.street;
+      address.city = data.address.city;
+      address.number = data.address.number;
+      address.state = data.address.state;
+      address.neighborhood = data.address.neighborhood;
+      address.addressDetail = data.address.addressDetail;
+    }
 
-    address.cep = data.address.cep;
-    address.street = data.address.street;
-    address.city = data.address.city;
-    address.number = data.address.number;
-    address.state = data.address.state;
-    address.neighborhood = data.address.neighborhood;
-    address.addressDetail = data.address.addressDetail;
+    if(data.newActivity) {
+      const activity = await Activity.findOne(data.newActivity.id);
+      this.activities.push(activity);
+    }
   }
 
   static async createOrUpdate(data: EnrollmentData) {
-    let enrollment = await this.findOne({ where: { cpf: data.cpf } });
+    let enrollment = await this.findOne({ where: { cpf: data.cpf }, relations: ["address", "activities"] });
 
     if (enrollment && enrollment.userId !== data.userId) {
       throw new CpfNotAvailableError(data.cpf);
     }
 
     enrollment ||= Enrollment.create();
-    enrollment.populateFromData(data);
+    await enrollment.populateFromData(data);
 
     return enrollment.save();
   }

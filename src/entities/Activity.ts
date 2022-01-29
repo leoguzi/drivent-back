@@ -50,7 +50,7 @@ export default class Activity extends BaseEntity implements IActivity {
     delete activityCopy.enrollment;
     return activityCopy;
   }
-  
+
   static async getOneByParameter(parameter: {[index: string]: unknown}, relations: string[] = null) {
     return Activity.findOne({ where: parameter, relations });
   }
@@ -62,20 +62,27 @@ export default class Activity extends BaseEntity implements IActivity {
   static async getOneByIdWithAvailableVacancies(activityId: number) {
     const activity = await Activity.getOneByParameter({ id: activityId }, ["enrollment"]);
 
-    let formattedActivity = this.getAvailableVacancies(activity);
-    formattedActivity = this.hideEnrollments(formattedActivity);
+    const formattedActivity = this.getAvailableVacancies(activity);
     return formattedActivity;
   }
 
   static async hasConflictant(desiredActivity: IActivity, enrollment: IEnrollment) {
-    const conflictantsActivities = await this.getByParameter(
-      { 
-        id: Not(desiredActivity.id),
-        startDate: Between(desiredActivity.startDate, desiredActivity.endDate),
-        endDate: Between(desiredActivity.startDate, desiredActivity.endDate)
-      }, [
-        "enrollment"
-      ]
+    const conflictantsActivities = await this.find(
+      {
+        where: [
+          { 
+            id: Not(desiredActivity.id),
+            startDate: Between(desiredActivity.startDate, desiredActivity.endDate)
+          },
+          { 
+            id: Not(desiredActivity.id),
+            endDate: Between(desiredActivity.startDate, desiredActivity.endDate)
+          }
+        ],
+        relations: [
+          "enrollment"
+        ]
+      }
     );
 
     return conflictantsActivities.filter(
@@ -83,7 +90,7 @@ export default class Activity extends BaseEntity implements IActivity {
         .find(alreadySubscribed => alreadySubscribed.id === enrollment.id)
     ).length > 0;
   }
-
+  
   static async getAllActivities(): Promise<EventDay[]> {
     const activities = await Activity.find({ relations: ["enrollment"] });
 

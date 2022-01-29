@@ -10,5 +10,5 @@ export async function getAllActivities(req: Request, res: Response) {
 
 export async function activityCheckin(req: Request, res: Response) {  
   await activityService.checkIn(req.body.activityId, req.enrollment);
-  return res.sendStatus(httpStatus.NOT_IMPLEMENTED);
+  return res.sendStatus(httpStatus.OK);
 }
