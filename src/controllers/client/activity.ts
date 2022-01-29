@@ -3,7 +3,7 @@ import httpStatus from "http-status";
 import * as activityService from "@/services/client/activity";
 
 export async function getEventSchedule(req: Request, res: Response) {
-  const activities = await activityService.getEventSchedule();
+  const activities = await activityService.getEventSchedule(req.enrollment);
     
   res.send(activities).status(httpStatus.OK);
 }

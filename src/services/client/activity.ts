@@ -5,22 +5,22 @@ import NotFoundError from "@/errors/NotFoundError";
 import ConflictError from "@/errors/ConflictError";
 import * as enrollmentService from "@/services/client/enrollment";
 
-export async function getEventSchedule(): Promise<EventDay[]> {
-  return Activity.getEventSchedule();
+export async function getEventSchedule(enrollment: IEnrollment): Promise<EventDay[]> {
+  return Activity.getEventSchedule(enrollment);
 }
 
 export async function checkIn(activityId: number, enrollment: IEnrollment) {
-  const desiredActivity = await Activity.getOneByIdWithAvailableVacancies(activityId);
+  const desiredActivity = await Activity.getOneByIdWithEnrollments(activityId);
   
   if(!desiredActivity) {
     throw new NotFoundError(`Não há atividades com id = ${activityId}`);
   }
 
-  if(Activity.isAlreadySubscribed(desiredActivity, enrollment)) {
+  if(desiredActivity.isAlreadySubscribed(enrollment)) {
     throw new ConflictError("Você já está registrado nessa atividade");
   }
 
-  if(desiredActivity.availableVacancies < 1) {
+  if(desiredActivity.getAvailableVacancies() < 1) {
     throw new ConflictError("Não há vagas disponíveis na atividade desejada");
   }
 

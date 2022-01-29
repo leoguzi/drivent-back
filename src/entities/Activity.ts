@@ -47,17 +47,13 @@ export default class Activity extends BaseEntity implements IActivity {
     });
   }
 
-  static getAvailableVacancies(activity: ActivityData) {
-    const activityCopy = { ...activity };
-    activityCopy.availableVacancies = activity.vacancies - activity.enrollment.length;
-    return activityCopy;
+  getAvailableVacancies() {
+    return this.vacancies - this.enrollment.length;
   }
 
-  static getSubscriptions(activity: ActivityData) {
-    const activityCopy = { ...activity };
-    activityCopy.subscriptions = activity.enrollment.length;
-    return activityCopy;
-  }
+  isAlreadySubscribed(enrollment: IEnrollment) {
+    return !!this.enrollment.find(alreadySubscribed => alreadySubscribed.id === enrollment.id);
+  } 
 
   static hideEnrollments(activity: ActivityData) {
     const activityCopy = { ...activity };
@@ -65,23 +61,17 @@ export default class Activity extends BaseEntity implements IActivity {
     return activityCopy;
   }
 
-  static isAlreadySubscribed(activity: ActivityData, enrollment: IEnrollment) {
-    return activity.enrollment.find(alreadySubscribed => alreadySubscribed.id === enrollment.id);
-  } 
-  
-  static async getOneByParameter(parameter: {[index: string]: unknown}, relations: string[] = null) {
-    return Activity.findOne({ where: parameter, relations });
+  static formatActivityData(activity: Activity, enrollment: IEnrollment) {
+    const formattedData = {
+      ...activity,
+      availableVacancies: activity.getAvailableVacancies(),
+      isSubscribed: activity.isAlreadySubscribed(enrollment)
+    };
+    return this.hideEnrollments(formattedData);
   }
 
-  static async getByParameter(parameter: {[index: string]: unknown}, relations: string[] = null) {
-    return Activity.find({ where: parameter, relations });
-  }
-
-  static async getOneByIdWithAvailableVacancies(activityId: number) {
-    const activity = await Activity.getOneByParameter({ id: activityId }, ["enrollment"]);
-
-    const formattedActivity = this.getAvailableVacancies(activity);
-    return formattedActivity;
+  static async getOneByIdWithEnrollments(activityId: number) {
+    return Activity.findOne({ where: { id: activityId }, relations: ["enrollment"] });
   }
 
   static async hasConflictant(desiredActivity: IActivity, enrollment: IEnrollment) {
@@ -104,11 +94,11 @@ export default class Activity extends BaseEntity implements IActivity {
     );
 
     return conflictantsActivities.filter(
-      activity => Activity.isAlreadySubscribed(activity, enrollment)
+      activity => activity.isAlreadySubscribed(enrollment)
     ).length > 0;
   }
 
-  static async getAllActivitiesByDay() {
+  static async getAllActivitiesByDay(enrollment: IEnrollment) {
     const activities = await Activity.find({ relations: ["enrollment"] });
 
     const activitiesByDay= {} as {
@@ -118,9 +108,7 @@ export default class Activity extends BaseEntity implements IActivity {
     activities.forEach((activity: Activity) => {
       const date = activity.getFomattedInitialDate();
       
-      let formattedActivity = this.getAvailableVacancies(activity);
-      formattedActivity = this.getSubscriptions(formattedActivity);
-      formattedActivity = this.hideEnrollments(formattedActivity);
+      const formattedActivity = this.formatActivityData(activity, enrollment);
 
       if (activitiesByDay[date]) {
         return activitiesByDay[date].push(formattedActivity);
@@ -131,8 +119,8 @@ export default class Activity extends BaseEntity implements IActivity {
     return activitiesByDay;
   }
 
-  static async getEventSchedule(): Promise<EventDay[]> {
-    const activitiesByDay = await this.getAllActivitiesByDay();
+  static async getEventSchedule(enrollment: IEnrollment): Promise<EventDay[]> {
+    const activitiesByDay = await this.getAllActivitiesByDay(enrollment);
     
     const eventsDayByLocation: EventDay[] = [];
 
