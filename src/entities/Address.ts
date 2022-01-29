@@ -1,3 +1,4 @@
+import AddressData from "@/interfaces/address";
 import {
   BaseEntity,
   Entity,
@@ -41,4 +42,14 @@ export default class Address extends BaseEntity implements IAddress {
   @OneToOne(() => Enrollment, (enrollment: Enrollment) => enrollment.address)
   @JoinColumn()
   enrollment: Enrollment;
+
+  populateFromData(data: AddressData) {
+    this.cep = data.cep;
+    this.street = data.street;
+    this.city = data.city;
+    this.number = data.number;
+    this.state = data.state;
+    this.neighborhood = data.neighborhood;
+    this.addressDetail = data.addressDetail;
+  }
 }
