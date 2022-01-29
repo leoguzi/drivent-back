@@ -5,6 +5,14 @@ export async function createNewEnrollment(enrollmentData: EnrollmentData) {
   await Enrollment.createOrUpdate(enrollmentData);
 }
 
+export async function getEnrollment(userId: number) {
+  return Enrollment.getOneByParameter({ userId });
+}
+
 export async function getEnrollmentWithAddress(userId: number) {
-  return await Enrollment.getByUserIdWithAddress(userId);
+  return Enrollment.getOneByParameterWithAddress({ userId });
+}
+
+export async function getEnrollmentWithTicket(userId: number) {
+  return Enrollment.getOneByParameterWithTicket({ userId });
 }

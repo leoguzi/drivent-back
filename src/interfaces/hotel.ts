@@ -1,12 +1,10 @@
-import RoomData from "@/interfaces/room";
+import Hotel from "@/domain/Hotel";
+import RoomData from "./room";
 
-interface HotelData {
-    id?: number,
-    name: string,
-    image: string,
-    rooms: RoomData[],
-    roomTypes?: string[],
-    availableVacancies?: number
+interface HotelData extends Hotel {
+  rooms?: RoomData[],
+  roomTypes?: string[],
+  availableVacancies?: number
 }
 
 export default HotelData;

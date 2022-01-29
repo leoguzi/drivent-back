@@ -5,12 +5,12 @@ import * as reservationService from "@/services/client/reservation";
 import ReservationData from "@/interfaces/reservation";
 
 export async function saveReservationInfo(req: Request, res: Response) {
-  const reservationData = req.body as ReservationData;
+  const reservationData = { ...req.body, enrollment: req.enrollment } as ReservationData;
   await reservationService.createNewReservation(reservationData);
   res.sendStatus(httpStatus.CREATED);
 }
 
 export async function getReservationInfo(req: Request, res: Response) {
-  const reservation = await reservationService.findUserReservation(req.user.id);
+  const reservation = await reservationService.findUserReservation(req.enrollment);
   res.send(reservation).status(httpStatus.OK);
 }

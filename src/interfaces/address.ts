@@ -1,12 +1,7 @@
-interface AddressData {
-    cep: string;
-    street: string;
-    city: string;
-    number: string;
-    state: string;
-    neighborhood: string;
-    addressDetail: string;
-    attendeeId?: number;
+import Address from "@/domain/Address";
+
+interface AddressData extends Address{
+  attendeeId?: number;
 }
 
 export default AddressData;

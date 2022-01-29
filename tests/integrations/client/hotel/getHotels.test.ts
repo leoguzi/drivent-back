@@ -21,6 +21,8 @@ import createRoom from "../../../factories/room";
 import createTicket from "../../../factories/ticket";
 import Address from "../../../../src/entities/Address";
 
+import { getEnrollment } from "../../../../src/services/client/enrollment";
+
 const route = "/hotels";
 
 describe("Tests for /hotels route", () => {
@@ -61,9 +63,9 @@ describe("Tests for /hotels route", () => {
   });
 
   afterEach(async() => {
-    clearTable(Ticket);
-    clearTable(Address);
-    clearTable(Enrollment);
+    await clearTable(Ticket);
+    await clearTable(Address);
+    await clearTable(Enrollment);
   });
 
   afterAll(async() => {
@@ -81,7 +83,7 @@ describe("Tests for /hotels route", () => {
     expect(response.body).toEqual(expectedBody);
   });
 
-  it("should return status code 403 (forbidden) when there is no enrollment", async() => {
+  it("should return status code 403 (forbidden) when there is no enrollment", async() => {    
     const response = await supertest(app)
       .get(route)
       .set("authorization", `Bearer ${session.token}`);
@@ -89,14 +91,14 @@ describe("Tests for /hotels route", () => {
     expect(response.status).toBe(httpStatus.FORBIDDEN);
   });
 
-  it("should return status code 403 (forbidden) when there is no ticket", async() => {
+  it("should return status code 404 (not found) when there is no ticket", async() => {
     enrollment = await createEnrollment(user);
 
     const response = await supertest(app)
       .get(route)
       .set("authorization", `Bearer ${session.token}`);
 
-    expect(response.status).toBe(httpStatus.FORBIDDEN);
+    expect(response.status).toBe(httpStatus.NOT_FOUND);
   });
 
   it("should return status code 403 (forbidden) when ticket isn't paid yet", async() => {

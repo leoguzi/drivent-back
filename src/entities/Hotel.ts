@@ -1,8 +1,11 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+import IHotel from "../domain/Hotel";
 import Room from "./Room";
+import NoContentError from "@/errors/NoContentError";
+import NotFoundError from "@/errors/NotFoundError";
 
 @Entity("hotels")
-export default class Hotel extends BaseEntity {
+export default class Hotel extends BaseEntity implements IHotel {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -12,7 +15,7 @@ export default class Hotel extends BaseEntity {
     @Column()
     image: string;
 
-    @OneToMany(() => Room, (room) => room.hotel, { eager: true })
+    @OneToMany(() => Room, (room) => room.hotel)
     rooms: Room[];
 
     private setValues(name: string, image: string) {
@@ -26,6 +29,58 @@ export default class Hotel extends BaseEntity {
       hotel.setValues(name, image);
 
       return Hotel.save(hotel);
+    }
+
+    static async getOneByParameter(parameter: {[index: string]: unknown}, relations: string[] = null) {
+      return Hotel.findOne({ where: parameter, relations });
+    }
+
+    static async getByParameter(parameter: {[index: string]: unknown}, relations: string[] = null) {
+      return Hotel.find({ where: parameter, relations });
+    }
+
+    static async getAllWithRoomsAndReservations() {
+      const hotels = await Hotel.find({ relations: ["rooms", "rooms.reservations"] });
+
+      if(hotels.length < 1) {
+        throw new NoContentError("Não há hotéis cadastrados");
+      }
+
+      return hotels;
+    }
+
+    static async getOneByIdWithRoomsAndReservations(hotelId: number) {
+      const hotel = await Hotel.findOne({ where: { id: hotelId }, relations: ["rooms", "rooms.reservations"] });
+
+      if(!hotel) {
+        throw new NotFoundError("Não há hotel cadastrado com este id");
+      }
+
+      if(hotel.rooms.length < 1) {
+        throw new NoContentError("Não há quarto cadastrados para este hotel");
+      }
+
+      return hotel;
+    }
+
+    private orderRoomsByName() {
+      return this.rooms.sort((roomA, roomB) => {
+        if (roomA.name > roomB.name)
+          return 1;
+        if (roomA.name < roomB.name)
+          return -1;
+        return 0;
+      });
+    }
+
+    private hideRoomsReservationsInfos() {
+      return this.rooms.map(room => ({ ...room, reservations: room.reservations.length }));
+    }
+
+    static async getRooms(hotelId: number) {
+      const hotel = await Hotel.getOneByIdWithRoomsAndReservations(hotelId);
+      hotel.orderRoomsByName();    
+      return hotel.hideRoomsReservationsInfos();
     }
 
     static async getHotelTypesOfRoomsAndAvailableVacancies() {
@@ -48,27 +103,8 @@ export default class Hotel extends BaseEntity {
         };
       }
 
-      const hotels = await Hotel.find();
+      const hotels = await Hotel.getAllWithRoomsAndReservations();
       
       return hotels.map(hotel => formatHotelInfos(hotel));
-    }
-  
-    getRoomsOrderedByName() {
-      return this.rooms.sort((roomA, roomB) => {
-        if (roomA.name > roomB.name)
-          return 1;
-        if (roomA.name < roomB.name)
-          return -1;
-        return 0;
-      });
-    }
-
-    private hideRoomsReservationsInfos(rooms: Room[]) {
-      return rooms.map(room => ({ ...room, reservations: room.reservations.length }));
-    }
-
-    getRooms() {
-      const orderedRooms = this.getRoomsOrderedByName();
-      return this.hideRoomsReservationsInfos(orderedRooms);
     }
 }

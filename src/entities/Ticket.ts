@@ -1,12 +1,13 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from "typeorm";
-
-import ConflictError from "@/errors/ConflictError";
-import TicketData from "@/interfaces/ticket";
+import ITicket from "../domain/Ticket";
+import IEnrollment from "@/domain/Enrollment";
 import Enrollment from "./Enrollment";
+import TicketData from "@/interfaces/ticket";
+import ConflictError from "@/errors/ConflictError";
 import NotFoundTicketError from "@/errors/NotFoundTicketError";
 
 @Entity("tickets")
-export default class Ticket extends BaseEntity {
+export default class Ticket extends BaseEntity implements ITicket {
     @PrimaryGeneratedColumn()
     id: number;
     
@@ -19,6 +20,9 @@ export default class Ticket extends BaseEntity {
     @Column()
     withHotel: boolean;
 
+    @Column()
+    enrollmentId: number;
+
     @OneToOne(() => Enrollment, (enrollment) => enrollment.ticket)
     @JoinColumn()
     enrollment: Enrollment;
@@ -26,7 +30,7 @@ export default class Ticket extends BaseEntity {
     populateFromData(data: TicketData) {
       this.type = data.type;
       this.withHotel = data.withHotel;
-      this.enrollment = data.enrollment;
+      this.enrollmentId = data.enrollment.id;
     }
 
     getValue() {
@@ -45,20 +49,30 @@ export default class Ticket extends BaseEntity {
       return ticket.save();
     }
 
-    static async getTicketByEnroll(enrollment: Enrollment) {
-      const ticket = await this.findOne({ where: { enrollment } });
+    static async updatePaymentDate(ticket: Ticket) {
+      await this.update(ticket, { paymentDate: new Date() });
+    }
+
+    static async getOneByParameter(parameter: {[index: string]: unknown}, relations: string[] = null) {
+      const ticket = await this.findOne({ where: parameter, relations });
+
       if (!ticket) {
         throw new NotFoundTicketError;
       }
       
+      return ticket;
+    }
+
+    static async getTicketByEnroll(enrollment: IEnrollment) {
+      return Ticket.getOneByParameter({ enrollment });
+    }
+    
+    static async getTicketWithValueByEnroll(enrollment: IEnrollment) {
+      const ticket = await Ticket.getOneByParameter({ enrollment });
+      
       return {
         ...ticket,
-        value: ticket.getValue(),
+        value: ticket.getValue()
       };
     }
-
-    static async updatePaymentDate(enrollment: Enrollment) {
-      await this.update({ enrollment }, { paymentDate: new Date() });
-    }
 }
-
