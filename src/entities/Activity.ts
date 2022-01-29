@@ -4,13 +4,16 @@ import {
   PrimaryGeneratedColumn,
   Column,
   ManyToMany,
-  JoinTable
+  JoinTable,
+  Between,
+  Not
 } from "typeorm";
 
 import IActivity from "../domain/Activity";
 import Enrollment from "./Enrollment";
 import EventDay from "@/interfaces/eventDay";
 import ActivityData from "@/interfaces/activity";
+import IEnrollment from "@/domain/Enrollment";
 
 @Entity("activities")
 export default class Activity extends BaseEntity implements IActivity {
@@ -35,7 +38,52 @@ export default class Activity extends BaseEntity implements IActivity {
   @ManyToMany(() => Enrollment, (enrollment: Enrollment) => enrollment.activities)
   @JoinTable()
   enrollment: Enrollment[];
+
+  static getAvailableVacancies(activity: ActivityData) {
+    const activityCopy = { ...activity };
+    activityCopy.availableVacancies = activity.vacancies - activity.enrollment.length;
+    return activityCopy;
+  }
+
+  static hideEnrollments(activity: ActivityData) {
+    const activityCopy = { ...activity };
+    delete activityCopy.enrollment;
+    return activityCopy;
+  }
   
+  static async getOneByParameter(parameter: {[index: string]: unknown}, relations: string[] = null) {
+    return Activity.findOne({ where: parameter, relations });
+  }
+
+  static async getByParameter(parameter: {[index: string]: unknown}, relations: string[] = null) {
+    return Activity.find({ where: parameter, relations });
+  }
+
+  static async getOneByIdWithAvailableVacancies(activityId: number) {
+    const activity = await Activity.getOneByParameter({ id: activityId }, ["enrollment"]);
+
+    let formattedActivity = this.getAvailableVacancies(activity);
+    formattedActivity = this.hideEnrollments(formattedActivity);
+    return formattedActivity;
+  }
+
+  static async hasConflictant(desiredActivity: IActivity, enrollment: IEnrollment) {
+    const conflictantsActivities = await this.getByParameter(
+      { 
+        id: Not(desiredActivity.id),
+        startDate: Between(desiredActivity.startDate, desiredActivity.endDate),
+        endDate: Between(desiredActivity.startDate, desiredActivity.endDate)
+      }, [
+        "enrollment"
+      ]
+    );
+
+    return conflictantsActivities.filter(
+      activity => activity.enrollment
+        .find(alreadySubscribed => alreadySubscribed.id === enrollment.id)
+    ).length > 0;
+  }
+
   static async getAllActivities(): Promise<EventDay[]> {
     const activities = await Activity.find({ relations: ["enrollment"] });
 
