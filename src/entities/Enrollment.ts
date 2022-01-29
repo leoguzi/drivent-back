@@ -58,15 +58,7 @@ export default class Enrollment extends BaseEntity implements IEnrollment {
 
     if(data.address) {
       this.address ||= Address.create();
-      const { address } = this;
-  
-      address.cep = data.address.cep;
-      address.street = data.address.street;
-      address.city = data.address.city;
-      address.number = data.address.number;
-      address.state = data.address.state;
-      address.neighborhood = data.address.neighborhood;
-      address.addressDetail = data.address.addressDetail;
+      this.address.populateFromData(data.address);
     }
 
     if(data.newActivity) {
