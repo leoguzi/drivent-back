@@ -1,12 +1,8 @@
-import AddressData from "@/interfaces/address";
+import Enrollment from "@/domain/Enrollment";
+import AddressData from "./address";
 
-interface EnrollmentData {
-    name: string,
-    cpf: string,
-    birthday: string,
-    address: AddressData,
-    phone: string, 
-    userId: number
+interface EnrollmentData extends Enrollment{
+  address: AddressData,
 }
 
 export default EnrollmentData;

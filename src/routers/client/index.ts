@@ -10,16 +10,24 @@ import ticketRouter from "@/routers/client/ticket";
 import activityRouter from "@/routers/client/activity";
 
 import tokenValidationMiddleware from "@/middlewares/tokenValidationMiddleware";
+import ensureEnrolled from "@/middlewares/ensureEnrolledMiddleware";
+import ensurePaidTicket from "@/middlewares/ensurePaidTicketMiddleware";
 
 const router = Router();
 
 router.use("/event", eventRouter);
 router.use("/users", userRouter);
 router.use("/auth", authRouter);
-router.use("/enrollments", tokenValidationMiddleware, enrollmentRouter);
-router.use("/hotels", tokenValidationMiddleware, hotelRouter);
-router.use("/reservation", tokenValidationMiddleware, reservationRoute);
-router.use("/tickets", tokenValidationMiddleware, ticketRouter);
-router.use("/activities", tokenValidationMiddleware, activityRouter);
+
+router.use(tokenValidationMiddleware);
+router.use("/enrollments", enrollmentRouter);
+
+router.use(ensureEnrolled);
+router.use("/tickets", ticketRouter);
+
+router.use(ensurePaidTicket);
+router.use("/hotels", hotelRouter);
+router.use("/reservation", reservationRoute);
+router.use("/activities", activityRouter);
 
 export default router;

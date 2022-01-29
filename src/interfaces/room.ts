@@ -1,13 +1,10 @@
-import ReservationData from "@/interfaces/reservation";
+import Room from "@/domain/Room";
+import ReservationData from "./reservation";
 import HotelData from "./hotel";
 
-interface RoomData {
-    id?: number,
-    name: string,
-    vacancies: number,
-    hotelId: number,
-    reservations?: ReservationData[] | number
-    hotel?: HotelData
+interface RoomData extends Room{
+  reservations?: ReservationData[] | number
+  hotel?: HotelData
 }
 
 export default RoomData;

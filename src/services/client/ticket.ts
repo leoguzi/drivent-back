@@ -1,40 +1,32 @@
 import TicketData from "@/interfaces/ticket";
 import Ticket from "@/entities/Ticket";
-import * as enrollmentService from "@/services/client/enrollment";
-import CannotBuyTicketBeforeEnrollError from "@/errors/CannotBuyTicketBeforeEnrollError";
+import IEnrollment from "@/domain/Enrollment";
 import CannotBuyTicketOnlineWithHotelError from "@/errors/CannotBuyTicketOnlineWithHotelError";
 import ConflictError from "@/errors/ConflictError";
 
-export async function createNewTicket(ticketData: TicketData, userId: number) {
-  const enrollment = await enrollmentService.getEnrollmentWithAddress(userId);
-  if (!enrollment) {
-    throw new CannotBuyTicketBeforeEnrollError;
-  }
-
+export async function createNewTicket(ticketData: TicketData) {
   if (ticketData.type === "online" && ticketData.withHotel) {
     throw new CannotBuyTicketOnlineWithHotelError;
   }
- 
-  ticketData.enrollment = enrollment;
+
   await Ticket.createTicket(ticketData);
 }
 
-export async function updatePaymentDateTicket(userId: number) {
-  const enrollment = await enrollmentService.getEnrollmentWithAddress(userId);
-  if (!enrollment) {
-    throw new CannotBuyTicketBeforeEnrollError;
-  }
+export async function getTicketByEnrollment(enrollment: IEnrollment) {  
+  return Ticket.getTicketByEnroll(enrollment);
+}
 
-  const ticket = await Ticket.getTicketByEnroll(enrollment);
+export async function getTicketWithValueByEnrollment(enrollment: IEnrollment) {  
+  return Ticket.getTicketWithValueByEnroll(enrollment);
+}
+
+export async function updatePaymentDateTicket(enrollment: IEnrollment) {
+  const ticket = await getTicketByEnrollment(enrollment);
+
   if (ticket.paymentDate) {
     throw new ConflictError("Você já pagou seu ingresso");
   }
 
-  await Ticket.updatePaymentDate(enrollment);
+  await Ticket.updatePaymentDate(ticket);
 }
 
-export async function getTicket(userId: number) {
-  const enrollment = await enrollmentService.getEnrollmentWithAddress(userId);
-  
-  return await Ticket.getTicketByEnroll(enrollment);
-}

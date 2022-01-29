@@ -6,10 +6,11 @@ import {
   OneToOne,
   JoinColumn,
 } from "typeorm";
+import IAddress from "../domain/Address";
 import Enrollment from "./Enrollment";
 
 @Entity("addresses")
-export default class Address extends BaseEntity {
+export default class Address extends BaseEntity implements IAddress {
   @PrimaryGeneratedColumn()
   id: number;
 

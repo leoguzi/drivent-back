@@ -1,7 +1,8 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import ISession from "../domain/Session";
 
 @Entity("sessions")
-export default class Session extends BaseEntity {
+export default class Session extends BaseEntity implements ISession {
   @PrimaryGeneratedColumn()
   id: number;
 

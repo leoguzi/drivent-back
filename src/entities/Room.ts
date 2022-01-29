@@ -1,9 +1,10 @@
 import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import IRoom from "../domain/Room";
 import Hotel from "./Hotel";
 import Reservation from "./Reservation";
 
 @Entity("rooms")
-export default class Room extends BaseEntity {
+export default class Room extends BaseEntity implements IRoom {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -20,7 +21,7 @@ export default class Room extends BaseEntity {
     @JoinColumn({ name: "hotelId" })
     hotel: Hotel;
 
-    @OneToMany(() => Reservation, (reservation) =>  reservation.room, { eager: true })
+    @OneToMany(() => Reservation, (reservation) =>  reservation.room)
     reservations: Reservation[];
 
     getRoomType() {
@@ -38,7 +39,7 @@ export default class Room extends BaseEntity {
       return this.vacancies - this.reservations.length;
     }
 
-    setValues(name: string, vacancies: number, hotel: Hotel) {
+    private setValues(name: string, vacancies: number, hotel: Hotel) {
       this.name = name;
       this.vacancies = vacancies;
       this.hotel = hotel;
@@ -50,5 +51,13 @@ export default class Room extends BaseEntity {
       room.setValues(name, vacancies, hotel);
       
       return Room.save(room);
+    }
+
+    static async getOneByParameter(parameter: {[index: string]: unknown}, relations: string[] = null) {
+      return this.findOne({ where: parameter, relations });
+    }
+
+    static async getOneByIdWithReservations(roomId: number) {
+      return this.getOneByParameter({ id: roomId }, ["reservations"]);
     }
 }

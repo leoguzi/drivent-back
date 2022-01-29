@@ -1,4 +1,3 @@
-
 import {
   BaseEntity,
   Entity,
@@ -8,12 +7,13 @@ import {
   JoinTable
 } from "typeorm";
 
-import EventDay from "@/interfaces/eventDay";
+import IActivity from "../domain/Activity";
 import Enrollment from "./Enrollment";
+import EventDay from "@/interfaces/eventDay";
 import ActivityData from "@/interfaces/activity";
 
 @Entity("activities")
-export default class Activity extends BaseEntity {
+export default class Activity extends BaseEntity implements IActivity {
   @PrimaryGeneratedColumn()
   id: number;
 

@@ -1,5 +1,4 @@
-import CpfNotAvailableError from "@/errors/CpfNotAvailable";
-import EnrollmentData from "@/interfaces/enrollment";
+
 import {
   BaseEntity,
   Entity,
@@ -8,13 +7,16 @@ import {
   OneToOne,
   ManyToMany,
 } from "typeorm";
-import Address from "@/entities/Address";
+import IEnrollment from "../domain/Enrollment";
+import Address from "./Address";
 import Reservation from "./Reservation";
 import Ticket from "./Ticket";
 import Activity from "./Activity";
+import EnrollmentData from "@/interfaces/enrollment";
+import CpfNotAvailableError from "@/errors/CpfNotAvailable";
 
 @Entity("enrollments")
-export default class Enrollment extends BaseEntity {
+export default class Enrollment extends BaseEntity implements IEnrollment {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -34,7 +36,6 @@ export default class Enrollment extends BaseEntity {
   userId: number;
 
   @OneToOne(() => Address, (address: Address) => address.enrollment, {
-    eager: true,
     cascade: ["insert", "update"],
   })
   address: Address;
@@ -42,11 +43,10 @@ export default class Enrollment extends BaseEntity {
   @OneToOne(() => Reservation, (reservation) => reservation.enrollment)
   reservation: Reservation;
   
-  @OneToOne(() => Ticket, (ticket: Ticket) => ticket.enrollment, { eager: true })
+  @OneToOne(() => Ticket, (ticket: Ticket) => ticket.enrollment)
   ticket: Ticket;
 
   @ManyToMany(() => Activity, (activity: Activity) => activity.enrollment)
-  
   activities: Activity[];
 
   populateFromData(data: EnrollmentData) {
@@ -81,7 +81,15 @@ export default class Enrollment extends BaseEntity {
     return enrollment.save();
   }
 
-  static async getByUserIdWithAddress(userId: number) {
-    return await this.findOne({ where: { userId } });
+  static async getOneByParameter(parameter: {[index: string]: unknown}, relations: string[] = null) {
+    return Enrollment.findOne({ where: parameter, relations });
+  }
+
+  static async getOneByParameterWithAddress(parameter: {[index: string]: unknown}) {
+    return Enrollment.getOneByParameter(parameter, ["address"]);
+  }
+
+  static async getOneByParameterWithTicket(parameter: {[index: string]: unknown}) {
+    return Enrollment.getOneByParameter(parameter, ["ticket"]);
   }
 }

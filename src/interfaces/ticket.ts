@@ -1,10 +1,8 @@
-import Enrollment from "@/entities/Enrollment";
+import Ticket from "@/domain/Ticket";
+import Enrollment from "@/domain/Enrollment";
 
-interface TicketData{
-    enrollment: Enrollment,
-    type: string,
-    paymentDate?: Date | null,
-    withHotel: boolean
+interface TicketData extends Ticket{
+    enrollment?: Enrollment
 }
 
 export default TicketData;

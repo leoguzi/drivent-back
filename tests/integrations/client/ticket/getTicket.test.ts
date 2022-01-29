@@ -54,6 +54,7 @@ describe("getTicket", () => {
       type: ticket.type,
       paymentDate: ticket.paymentDate,
       withHotel: ticket.withHotel,
+      enrollmentId: enrollment.id,
       value: 600,
     };
 
