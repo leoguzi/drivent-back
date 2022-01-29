@@ -1,7 +1,7 @@
 import Reservation from "@/entities/Reservation";
-import Enrollment from "@/entities/Enrollment";
-import * as hotelService from "@/services/client/hotel";
 import ReservationData from "@/interfaces/reservation";
+import IEnrollment from "@/domain/Enrollment";
+import * as hotelService from "@/services/client/hotel";
 import ConflictError from "@/errors/ConflictError";
 
 export async function createNewReservation(reservationData: ReservationData) {
@@ -14,7 +14,7 @@ export async function createNewReservation(reservationData: ReservationData) {
   return await Reservation.createOrUpdate(reservationData);
 }
 
-export async function findUserReservation(enrollment: Enrollment): Promise<ReservationData> {
+export async function findUserReservation(enrollment: IEnrollment): Promise<ReservationData> {
   const reservation = await Reservation.getOneByEnrollment(enrollment);
   
   const formattedReservation: ReservationData = {

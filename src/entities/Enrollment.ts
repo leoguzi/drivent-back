@@ -1,5 +1,4 @@
-import CpfNotAvailableError from "@/errors/CpfNotAvailable";
-import EnrollmentData from "@/interfaces/enrollment";
+
 import {
   BaseEntity,
   Entity,
@@ -8,13 +7,16 @@ import {
   OneToOne,
   ManyToMany,
 } from "typeorm";
-import Address from "@/entities/Address";
+import IEnrollment from "../domain/Enrollment";
+import Address from "./Address";
 import Reservation from "./Reservation";
 import Ticket from "./Ticket";
 import Activity from "./Activity";
+import EnrollmentData from "@/interfaces/enrollment";
+import CpfNotAvailableError from "@/errors/CpfNotAvailable";
 
 @Entity("enrollments")
-export default class Enrollment extends BaseEntity {
+export default class Enrollment extends BaseEntity implements IEnrollment {
   @PrimaryGeneratedColumn()
   id: number;
 

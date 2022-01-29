@@ -1,10 +1,11 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+import IHotel from "../domain/Hotel";
 import Room from "./Room";
 import NoContentError from "@/errors/NoContentError";
 import NotFoundError from "@/errors/NotFoundError";
 
 @Entity("hotels")
-export default class Hotel extends BaseEntity {
+export default class Hotel extends BaseEntity implements IHotel {
     @PrimaryGeneratedColumn()
     id: number;
 

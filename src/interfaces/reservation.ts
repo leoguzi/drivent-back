@@ -1,10 +1,10 @@
-import RoomData from "./room";
+import Reservation from "@/domain/Reservation";
+import Enrollment from "@/domain/Enrollment";
+import RoomData from "@/interfaces/room";
 
-interface ReservationData {
-    id?: number,
-    roomId: number;
-    enrollment?: any;
-    room?: RoomData;
+interface ReservationData extends Reservation{
+  enrollment?: Enrollment;
+  room?: RoomData;
 }
 
 export default ReservationData;

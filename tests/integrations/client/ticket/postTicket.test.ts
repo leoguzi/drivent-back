@@ -62,6 +62,7 @@ describe("postTicketInfo", () => {
       type: ticketInfo.type,
       paymentDate: null,
       withHotel: ticketInfo.withHotel,
+      enrollmentId: enrollment.id,
       value: 600
     });
     
