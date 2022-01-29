@@ -20,6 +20,6 @@ router.use("/enrollments", tokenValidationMiddleware, enrollmentRouter);
 router.use("/hotels", tokenValidationMiddleware, hotelRouter);
 router.use("/reservation", tokenValidationMiddleware, reservationRoute);
 router.use("/tickets", tokenValidationMiddleware, ticketRouter);
-router.use("/activities", activityRouter);
+router.use("/activities", tokenValidationMiddleware, activityRouter);
 
 export default router;

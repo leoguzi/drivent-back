@@ -75,5 +75,21 @@ export default class Activity extends BaseEntity {
     
     return eventsDayByLocation;
   }
+
+  setValues(activityData: ActivityData) {
+    this.name = activityData.name;
+    this.startDate = activityData.startDate;
+    this.endDate = activityData.endDate;
+    this.vacancies = activityData.vacancies;
+    this.location = activityData.location;
+  }
+
+  static async createNew(activityData: ActivityData) {
+    const activity = new Activity();
+
+    activity.setValues(activityData);
+
+    return Activity.save(activity);
+  }
 }
 

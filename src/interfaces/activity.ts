@@ -6,8 +6,8 @@ interface ActivityData {
   startDate: Date, 
   endDate: Date,
   vacancies: number,    
-  subscriptions: number,
-  availableVacancies: number,
+  subscriptions?: number,
+  availableVacancies?: number,
   location: string,  
   enrollment?: Enrollment[]
 }
