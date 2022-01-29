@@ -5,7 +5,7 @@ import activityCheckinSchema from "@/schemas/activityCheckinSchema";
 
 const router = Router();
 
-router.get("/", activityController.getAllActivities);
+router.get("/", activityController.getEventSchedule);
 router.post("/check-in", schemaValidatingMiddleware(activityCheckinSchema), activityController.activityCheckin);
 
 export default router;

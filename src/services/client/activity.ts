@@ -5,9 +5,8 @@ import NotFoundError from "@/errors/NotFoundError";
 import ConflictError from "@/errors/ConflictError";
 import * as enrollmentService from "@/services/client/enrollment";
 
-export async function getAllActivities(): Promise<EventDay[]> {
-  const activities = await Activity.getAllActivities();
-  return activities;
+export async function getEventSchedule(): Promise<EventDay[]> {
+  return Activity.getEventSchedule();
 }
 
 export async function checkIn(activityId: number, enrollment: IEnrollment) {

@@ -39,9 +39,23 @@ export default class Activity extends BaseEntity implements IActivity {
   @JoinTable()
   enrollment: Enrollment[];
 
+  getFomattedInitialDate() {
+    return this.startDate.toLocaleDateString("pt-br", {
+      day: "numeric",
+      month: "numeric",
+      weekday: "long"
+    });
+  }
+
   static getAvailableVacancies(activity: ActivityData) {
     const activityCopy = { ...activity };
     activityCopy.availableVacancies = activity.vacancies - activity.enrollment.length;
+    return activityCopy;
+  }
+
+  static getSubscriptions(activity: ActivityData) {
+    const activityCopy = { ...activity };
+    activityCopy.subscriptions = activity.enrollment.length;
     return activityCopy;
   }
 
@@ -51,6 +65,10 @@ export default class Activity extends BaseEntity implements IActivity {
     return activityCopy;
   }
 
+  static isAlreadySubscribed(activity: ActivityData, enrollment: IEnrollment) {
+    return activity.enrollment.find(alreadySubscribed => alreadySubscribed.id === enrollment.id);
+  } 
+  
   static async getOneByParameter(parameter: {[index: string]: unknown}, relations: string[] = null) {
     return Activity.findOne({ where: parameter, relations });
   }
@@ -86,37 +104,36 @@ export default class Activity extends BaseEntity implements IActivity {
     );
 
     return conflictantsActivities.filter(
-      activity => activity.enrollment
-        .find(alreadySubscribed => alreadySubscribed.id === enrollment.id)
+      activity => Activity.isAlreadySubscribed(activity, enrollment)
     ).length > 0;
   }
-  
-  static async getAllActivities(): Promise<EventDay[]> {
+
+  static async getAllActivitiesByDay() {
     const activities = await Activity.find({ relations: ["enrollment"] });
 
     const activitiesByDay= {} as {
       [key: string]: ActivityData[];
     };
 
-    activities.map((activity: Activity) => {
-      const formattedActivity = {
-        ...activity,
-        subscriptions: activity.enrollment.length,
-        availableVacancies: activity.vacancies - activity.enrollment.length
-      };
-      delete formattedActivity.enrollment;
+    activities.forEach((activity: Activity) => {
+      const date = activity.getFomattedInitialDate();
+      
+      let formattedActivity = this.getAvailableVacancies(activity);
+      formattedActivity = this.getSubscriptions(formattedActivity);
+      formattedActivity = this.hideEnrollments(formattedActivity);
 
-      const date = activity.startDate.toLocaleDateString("pt-br", {
-        day: "numeric",
-        month: "numeric",
-        weekday: "long"
-      });
       if (activitiesByDay[date]) {
-        activitiesByDay[date].push(formattedActivity);
+        return activitiesByDay[date].push(formattedActivity);
       }
-      else { activitiesByDay[date] = [formattedActivity]; }
+      return activitiesByDay[date] = [formattedActivity];
     });
 
+    return activitiesByDay;
+  }
+
+  static async getEventSchedule(): Promise<EventDay[]> {
+    const activitiesByDay = await this.getAllActivitiesByDay();
+    
     const eventsDayByLocation: EventDay[] = [];
 
     for (const eventDay in activitiesByDay) {
