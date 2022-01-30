@@ -75,16 +75,19 @@ export default class Activity extends BaseEntity implements IActivity {
   }
 
   static async hasConflictant(desiredActivity: IActivity, enrollment: IEnrollment) {
+    const oneSecondBeforeEnd = new Date(desiredActivity.endDate.getTime()-1);
+    const oneSecondAfterStart = new Date(desiredActivity.startDate.getTime()+1);
+
     const conflictantsActivities = await this.find(
       {
         where: [
           { 
             id: Not(desiredActivity.id),
-            startDate: Between(desiredActivity.startDate, desiredActivity.endDate)
+            startDate: Between(desiredActivity.startDate, oneSecondBeforeEnd)
           },
           { 
             id: Not(desiredActivity.id),
-            endDate: Between(desiredActivity.startDate, desiredActivity.endDate)
+            endDate: Between(oneSecondAfterStart, desiredActivity.endDate)
           }
         ],
         relations: [
