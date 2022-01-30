@@ -14,6 +14,7 @@ import Ticket from "./Ticket";
 import Activity from "./Activity";
 import EnrollmentData from "@/interfaces/enrollment";
 import CpfNotAvailableError from "@/errors/CpfNotAvailable";
+import CannotUpdateCpfError from "@/errors/CannotUpdateCpfError";
 
 @Entity("enrollments")
 export default class Enrollment extends BaseEntity implements IEnrollment {
@@ -68,10 +69,15 @@ export default class Enrollment extends BaseEntity implements IEnrollment {
   }
 
   static async createOrUpdate(data: EnrollmentData) {
-    let enrollment = await this.findOne({ where: { cpf: data.cpf }, relations: ["address", "activities"] });
+    let enrollment = await this.findOne({ where: { userId: data.userId }, relations: ["address", "activities"] });
+    
+    if(enrollment && enrollment.cpf !== data.cpf) {
+      throw new CannotUpdateCpfError();
+    }
 
-    if (enrollment && enrollment.userId !== data.userId) {
-      throw new CpfNotAvailableError(data.cpf);
+    if (!enrollment) {
+      const hasCpf = await this.findOne({ where: { cpf: data.cpf } });
+      if (hasCpf) throw new CpfNotAvailableError(data.cpf);
     }
 
     enrollment ||= Enrollment.create();
