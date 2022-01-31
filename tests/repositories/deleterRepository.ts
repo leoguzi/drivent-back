@@ -8,6 +8,7 @@ import Address from "../../src/entities/Address";
 import Session from "../../src/entities/Session";
 import User from "../../src/entities/User";
 import Setting from "../../src/entities/Setting";
+import Activity from "../../src/entities/Activity";
 
 export async function clearTable(entity: EntityTarget<BaseEntity>) {
   return getConnection()
@@ -33,4 +34,8 @@ export async function clearDatabase() {
   await clearTable(Session);
   await clearTable(User);
   await clearTable(Setting);
+
+  //activities relations
+
+  await clearTable(Activity);
 }

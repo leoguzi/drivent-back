@@ -7,7 +7,7 @@ export default async function ensurePaidTicket(req: Request, res: Response, next
   const ticket = await ticketService.getTicketByEnrollment(req.enrollment);
 
   if (!ticket) {
-    throw new ForbiddenError("Você precisa ter comprar um ticket antes de prosseguir");
+    throw new ForbiddenError("Você precisa comprar um ticket antes de prosseguir");
   }
 
   if (!ticket.paymentDate) {

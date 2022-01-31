@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "NODE_ENV=test npm run eslint:fix && npx jest -i",
-    "test:watch": "NODE_ENV=test npm run eslint:fix && npx jest -i --watchAll",
+    "test:watch": "NODE_ENV=test npm run eslint:fix && npx jest -i --watchAll --verbose",
     "build": "NODE_ENV=production rm -rf ./dist && npm run eslint:fix && npx ttsc -P ./tsconfig.json --outDir dist && babel dist -d dist",
     "start": "NODE_ENV=production NODE_TLS_REJECT_UNAUTHORIZED=0 node dist/server.js",
     "dev": "NODE_ENV=development npx nodemon --watch \"src/**\" --ext \"ts,json\" --exec \"npm run eslint:fix && ts-node -r tsconfig-paths/register --files src/server.ts\"",

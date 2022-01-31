@@ -17,6 +17,7 @@ import createSession from "../../../factories/session";
 import createEnrollment from "../../../factories/enrollment";
 import createTicket from "../../../factories/ticket";
 import createActivity from "../../../factories/activity";
+import Address from "../../../../src/entities/Address";
 
 const route = "/activities";
 
@@ -31,16 +32,59 @@ describe("Tests for /activities route", () => {
     await init();
     await clearDatabase();
     await createEvent();
-    await createActivity();
     
     user = await createUser();
     session = await createSession(user);
     enrollment = await createEnrollment(user);
     ticket = await createTicket(enrollment, true, true, "presencial");
+    activity = await createActivity();
   });
     
   afterAll(async() => {
     await clearDatabase();
     await closeConnection();
+  });
+
+  it("returns status 200 and a list of activities if sucess", async() => {
+    const result = await supertest(app)
+      .get(route)
+      .set("authorization", `Bearer ${session.token}`);
+    
+    expect(result.status).toBe(httpStatus.OK);
+    expect(result.body[0]).toEqual({
+      date: expect.any(String),
+      mainAuditorium: expect.any(Array),
+      sideAuditorium: expect.any(Array),
+      workshopRoom: expect.any(Array),
+    });
+  });
+
+  it("returs 404 (NotFound) if user has no ticket", async() => {
+    await clearTable(Ticket);
+
+    const result = await supertest(app)
+      .get(route)
+      .set("authorization", `Bearer ${session.token}`);
+    expect(result.status).toBe(httpStatus.NOT_FOUND);
+  });
+
+  it("returs 403 (forbidem) if user ticket is not paid", async() => {
+    await createTicket(enrollment, true, false, "presencial");
+    
+    const result = await supertest(app)
+      .get(route)
+      .set("authorization", `Bearer ${session.token}`);
+    expect(result.status).toBe(httpStatus.FORBIDDEN);
+  });
+
+  it("returs 403 (forbidem) if user is not enrolled", async() => {
+    await clearTable(Ticket);
+    await clearTable(Address);
+    await clearTable(Enrollment);
+
+    const result = await supertest(app)
+      .get(route)
+      .set("authorization", `Bearer ${session.token}`);
+    expect(result.status).toBe(httpStatus.FORBIDDEN);
   });
 });
