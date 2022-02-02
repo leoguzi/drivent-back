@@ -3,7 +3,7 @@ import httpStatus from "http-status";
 import * as certificateService from "@/services/client/certificate";
 
 export async function getCertificatePDF(request: Request, response: Response) {
-  const certificate = await certificateService.getDummy();
+  const certificate = await certificateService.getCertificatePDF(request.enrollment, request.ticket);
 
   response.setHeader("Content-Type", "application/pdf");
   response.setHeader(

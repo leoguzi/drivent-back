@@ -138,5 +138,48 @@ export default class Activity extends BaseEntity implements IActivity {
     
     return eventsDayByLocation;
   }
+
+  static async getEventTotalHours() {
+    const activities = await Activity.find({ 
+      select: ["startDate", "endDate"],
+      order: { startDate: "ASC", endDate: "ASC" }
+    });
+
+    const activitiesByDay: {
+      [index: string]: {
+        [index: string]: Date,
+      }
+    } = {};
+
+    activities.forEach(activity => {
+      const day = activity.getFomattedInitialDate();
+      const initialTime = activity.startDate;
+      const finalTime = activity.endDate;
+
+      if(activitiesByDay[day]) {
+        if(activitiesByDay[day]["initial"] > initialTime) {
+          activitiesByDay[day]["initial"] = initialTime;
+        }
+        if(activitiesByDay[day]["final"] < finalTime) {
+          activitiesByDay[day]["final"] = finalTime;
+        }
+      }else{
+        activitiesByDay[day]={
+          "initial": initialTime,
+          "final": finalTime
+        };
+      }
+    });
+
+    const milisecondToSeconds = 1/1000;
+    const secondsToMinutes = 1/60;
+    const minutesToHours = 1/60;
+    let totalHours = 0;
+    for(const day in activitiesByDay) {
+      const timeDifference = activitiesByDay[day]["final"].getTime()-activitiesByDay[day]["initial"].getTime(); 
+      totalHours+=timeDifference*milisecondToSeconds*secondsToMinutes*minutesToHours;
+    }
+    return totalHours;
+  }
 }
 

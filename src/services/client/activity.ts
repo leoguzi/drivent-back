@@ -32,3 +32,7 @@ export async function checkIn(activityId: number, enrollment: IEnrollment) {
 
   return savedEnrollment;
 }
+
+export async function getEventTotalHours(): Promise<number> {
+  return Activity.getEventTotalHours();
+}
