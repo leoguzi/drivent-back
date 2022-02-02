@@ -8,6 +8,7 @@ import hotelRouter from "@/routers/client/hotel";
 import reservationRoute from "@/routers/client/reservation";
 import ticketRouter from "@/routers/client/ticket";
 import activityRouter from "@/routers/client/activity";
+import certificateRouter from "@/routers/client/certificate";
 
 import tokenValidationMiddleware from "@/middlewares/tokenValidationMiddleware";
 import ensureEnrolled from "@/middlewares/ensureEnrolledMiddleware";
@@ -29,5 +30,6 @@ router.use(ensurePaidTicket);
 router.use("/hotels", hotelRouter);
 router.use("/reservation", reservationRoute);
 router.use("/activities", activityRouter);
+router.use("/certificate", certificateRouter);
 
 export default router;
