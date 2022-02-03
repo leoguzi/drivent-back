@@ -49,7 +49,8 @@ export function createCertificate(certificateData: { name: string, ticketType: s
     .fillAndStroke("#00000")
     .font("./fonts/roboto/Roboto-Italic.ttf")
     .fontSize(30)
-    .text(`DRIVENT - ${certificateData.ticketType}`, 310, 325);
+    .text(`DRIVENT - ${certificateData.ticketType === "presential" ? "PRESENCIAL" : "ONLINE"}`,
+      certificateData.ticketType === "presential" ? 270 : 300, 325);
   
   doc
     .fillAndStroke("#00000")
