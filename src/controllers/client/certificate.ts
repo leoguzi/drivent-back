@@ -12,5 +12,5 @@ export async function getCertificatePDF(request: Request, response: Response) {
   );
   response.setHeader("Cache-Control", "no-cache");
   response.setHeader("Pragma", "no-cache");
-  return response.status(httpStatus.NOT_IMPLEMENTED).send(certificate);
+  return response.status(httpStatus.OK).send(certificate);
 }
