@@ -7,7 +7,7 @@ export async function getCertificatePDF(enrollment: Enrollment, ticket: Ticket) 
   const certificateData = await getCertificateData(enrollment, ticket);
 
   const certificate = await createCertificate(certificateData);
-
+  
   return certificate;
 }
 

@@ -1,14 +1,11 @@
 import PDFDocument from "pdfkit";
-import fs from "fs";
 
 export function createCertificate(certificateData: { name: string, ticketType: string, hours: number}) {
   const doc = new PDFDocument({
     layout: "landscape",
     size: "A4",
   });
-
-  doc.pipe(fs.createWriteStream("certificate.pdf"));
-    
+  
   //MARGIN
   const distanceMargin = 16;
   doc
@@ -80,4 +77,5 @@ export function createCertificate(certificateData: { name: string, ticketType: s
   );
 
   doc.end();
+  return doc;
 }
